@@ -58,7 +58,8 @@ Dinosaur::Dinosaur(){
     coordinateY = 0.0;
     coordinateZ = 0.0;
 
-    variationX = 0.08;
+    //variationX = 0.08;
+    variationX = 0.2;
     maxVariationX = 0.5;
 
     variationY = 0.15;   

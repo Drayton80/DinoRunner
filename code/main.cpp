@@ -13,13 +13,14 @@ using namespace std;
 
 Dinosaur *dino = new Dinosaur();	// Instanciação de nosso dinossauro corredor
 Cactus *cactiPath[5];				// Sim, cacto no plural em inglês é cacti
-Cactus *cactiScene1[100];
-Cactus *cactiScene2[100];
+Cactus *cactiScene1[50];
+Cactus *cactiScene2[50];
+Cactus *cactiScene3[50];
 
 unsigned short int cactiSceneArraySize = sizeof(cactiScene1)/sizeof(cactiScene1[0]);
 unsigned short int cactiLimit = 150;
 unsigned int cactiGenerateEnd = 150;
-bool cactiGenerateSwitch = true;
+short int cactiGenerateSwitch = 0;
 float randomX;
 
 void objectsInitialPositions(){
@@ -30,6 +31,7 @@ void objectsInitialPositions(){
 
 		cactiScene1[i] = new Cactus(randomX-cactiLimit, 0.0, -(rand()%70 + 2));
 		cactiScene2[i] = new Cactus(randomX           , 0.0, -(rand()%70 + 2));
+		cactiScene3[i] = new Cactus(randomX+cactiLimit, 0.0, -(rand()%70 + 2));
 	}
 }
 
@@ -163,31 +165,51 @@ void display(void){
 
 	testLines();
 
-	if(cactiGenerateEnd-25 <= dino->getCoordinateX()){
+	if(cactiGenerateEnd <= dino->getCoordinateX()){
 		cactiGenerateEnd += cactiLimit;
 
-		if(cactiGenerateSwitch){
-			for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
-				randomX = rand()%cactiGenerateEnd + 1 + cactiGenerateEnd - cactiLimit;
+		switch(cactiGenerateSwitch){
+			case 0:
+				for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+					randomX = rand()%cactiLimit + 1 + cactiGenerateEnd;
 
-				cactiScene1[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
-			}
+					cactiScene1[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+				}
 
-			cactiGenerateSwitch = !cactiGenerateSwitch;
-		}else{
-			for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
-				randomX = rand()%cactiGenerateEnd + 1 + cactiGenerateEnd - cactiLimit;
+				cactiGenerateSwitch = 1;
 
-				cactiScene2[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
-			}
+				break;
 
-			cactiGenerateSwitch = !cactiGenerateSwitch;
+			case 1:
+				for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+					randomX = rand()%cactiLimit + 1 + cactiGenerateEnd;
+
+					cactiScene2[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+				}
+
+				cactiGenerateSwitch = 2;
+
+				break;
+
+			case 2:
+				for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+					randomX = rand()%cactiLimit + 1 + cactiGenerateEnd;
+
+					cactiScene3[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+				}
+
+				cactiGenerateSwitch = 0;
+
+				break;
+
 		}
+
 	}
 
 	for(int i = 0; i < cactiSceneArraySize; i++){
 		cactiScene1[i]->generate();
 		cactiScene2[i]->generate();
+		cactiScene3[i]->generate();
 	}
 	
 	dino->generate();
