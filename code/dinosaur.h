@@ -41,6 +41,7 @@ private:
     // do objeto em determinado instante
     float variationX;       // Variação Atual
     float maxVariationX;    // Variação Máxima
+    float variationY;
 
     // Define se o objeto está caindo ou não:
     bool falling;
@@ -57,8 +58,10 @@ Dinosaur::Dinosaur(){
     coordinateY = 0.0;
     coordinateZ = 0.0;
 
-    variationX = 0.15;
-    maxVariationX = 0.5;   
+    variationX = 0.08;
+    maxVariationX = 0.5;
+
+    variationY = 0.15;   
 
     falling = false;
 }
@@ -80,12 +83,13 @@ void Dinosaur::generate(){
         // Aqui o cubo faz o movimento contrário ao da translação
         // aplicada pela câmera para cancelar com o +moviment dela
         // e consequentemente permanecer parado
-        glTranslatef(coordinateX-0.7, coordinateY, coordinateZ);
+        glTranslatef(coordinateX-1.7, coordinateY, coordinateZ);
         //glTranslatef(coordinateX, coordinateY, coordinateZ);
 
-        // Define a cor do objeto:
+         // Define a cor do objeto:
         glColor3f (0.5f, 0.5f, 0.5f);
-        glutSolidCube(0.2); 
+        // Exibe o objeto:
+        glutSolidCube(0.5); 
     glPopMatrix();
 }
 
@@ -144,19 +148,17 @@ void Dinosaur::jumpAction(bool *jumping){
         // Enquanto o objeto não chegar até determinada altura
         // o valor de sua coordinateY (altura) é incrementada
         if(!falling){
-            coordinateY += 0.035;
+            coordinateY += variationY;
+            variationY -= 0.007;
             //coordinateY = sqrt(coordinateY*coordinateY + coordinateY + 0.01);
 
         // Quando o objeto atingi o valor máximo de altura, ele
         // começa a cair, ou seja, sua coordinateY começa a ser decrementada
-        }else{
-            coordinateY -= 0.035;
-            //coordinateY = -sqrt(coordinateY*coordinateY + coordinateY + 0.01);
         }
 
         // Aqui é feito a checagem se o objeto atingiu o valor máximo
         // da altura do pulo, se sim, falling é colocado como true
-        if (coordinateY >= 0.6) falling = true;
+        //if (coordinateY >= 2.5) falling = true;
 
         // Quando o objeto chega ao chão novamente é quando ele para
         // de cair e também deixa de pular. Ao apertar o botão de pulo
@@ -164,6 +166,7 @@ void Dinosaur::jumpAction(bool *jumping){
         // efetivamente só é verdadeira no fim do pulo.
         if(coordinateY <= 0.0){
             coordinateY = 0.0;      // Sua altura agora é definida como 0
+            variationY = 0.15;
             falling  = false;       // Sua queda agora é definida como falsa
             *jumping = false;       // assim como seu pulo
         }

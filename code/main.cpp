@@ -6,21 +6,24 @@
 #include "controls.h"
 #include "definitions.h"
 #include "dinosaur.h"
+#include "cactus.h"
 
 using namespace std;
 
-int window_width  = IMAGE_WIDTH;
-int window_height = IMAGE_HEIGHT;
-
-Dinosaur *dino = new Dinosaur();
+Dinosaur *dino = new Dinosaur();	// Instanciação de nosso dinossauro corredor
+Cactus *cacti[5];						// Sim, cacto no plural em inglês é cacti
 
 void objectsInitialPositions(){
 	dino->setCoordinateZ(-1.0);
+
+	cacti[0] = new Cactus(15.0f, 0.0f, -1.0f);
+	cacti[1] = new Cactus(5.0f, 0.0f, -1.0f);
+	cacti[2] = new Cactus(1.0f, 0.0f, -1.0f);
 }
 
 void camera (void) {
 	// Define as opções da perspectiva, como a Field of View, o near plane, etc
-	gluPerspective(60.0, (GLfloat)window_width/(GLfloat)window_height, 1.0, 100.0);
+	gluPerspective(60.0, (GLfloat)IMAGE_WIDTH/(GLfloat)IMAGE_HEIGHT, 1.0, 100.0);
 
 	// Se o modo fps estiver ativo a câmera fica livre para se movimentar:
 	if(fpsActive){
@@ -33,8 +36,8 @@ void camera (void) {
 	// lado é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
 	// sinal negativo em getCoordinate e em todas as outras coordenadas que queremos deslocá-la
     // É colocado getCoordinate Y aqui no deslocamento em y para dar uma sensação de movimento conjunto no
-    // momento do pulo (mas diminuido pelo 0.5) assim conferindo um aspecto de suavidade durante o pulo.
-    glTranslatef( -(dino->getCoordinateX()), -(dino->getCoordinateY())*0.5 - 0.3, -0.5);
+    // momento do pulo (mas diminuido pelo vezes 0.3) assim conferindo um aspecto de suavidade durante o pulo.
+    glTranslatef( -(dino->getCoordinateX()), -(dino->getCoordinateY())*0.3 - 0.7, -2.5);
 }
 
 void testLines(){
@@ -47,7 +50,7 @@ void testLines(){
 
 		int rgbSwitch = 1;
 
-		glTranslatef(0.0f, -0.5f, -3.0f);
+		//glTranslatef(0.0f, -0.5f, -3.0f);
 
 		int maxAndMinLines = 10000;
 
@@ -93,13 +96,13 @@ void testLines(){
 			glBegin(GL_LINES);
 				// Linhas Verticais:
 				glColor3f (redIncrement, blueIncrement, greenIncrement);
-				glVertex3f( i, -0.5f, -1000.0f);
-				glVertex3f( i, -0.5f,  1000.0f);
+				glVertex3f( (float) i, -0.2f, -1000.0f);
+				glVertex3f( (float) i, -0.2f,  1000.0f);
 
 				// Linhas Horizontais:
 				glColor3f (0.4f, 0.4f, 0.4f);
-				glVertex3f(-1000.0f, -0.5f, i);
-				glVertex3f( 1000.0f, -0.5f, i);			
+				glVertex3f(-1000.0f, -0.2f, (float) i);
+				glVertex3f( 1000.0f, -0.2f, (float) i);			
 			glEnd();
 
 		}
@@ -142,16 +145,22 @@ void display(void){
 	// Carrega a matriz identidade no conjunto de matrizes para
 	// poder limpar as matrizes de mudança
 	glLoadIdentity();
-	
+
 	camera();
 
-	//axis();
 	testLines();
 	
 	dino->generate();
 
     dino->runAction();
     dino->jumpAction(&jump);
+
+    //cacti[0]->setCoordinateX(cacti[0]->getCoordinateX() + dino->getCoordinateX()*0.5);
+	cacti[0]->generate();
+	//cacti[1]->setCoordinateX(cacti[1]->getCoordinateX());
+	cacti[1]->generate();
+	//cacti[2]->setCoordinateX(cacti[2]->getCoordinateX() + dino->getCoordinateX());
+	cacti[2]->generate();
 
     glutSwapBuffers();
 }
