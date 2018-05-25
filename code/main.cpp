@@ -30,10 +30,12 @@ void camera (void) {
 
 	// Faz com que a câmera se mova na direção horizontal para a direita (sentido positivo de x),
 	// pois, a partir do momento em que a câmera é fixa na origem, para que ela se mova para um
-	// lado, é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
-	// sinal negativo em position.
-    glTranslatef(-position, -0.3f, -0.5);
-    //glTranslatef(-position, -height-0.3, -0.5);
+	// lado é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
+	// sinal negativo em position e em todas as outras coordenadas que queremos deslocá-la
+    //glTranslatef(-position, -0.3f, -0.5);
+    // É colocado height aqui no deslocamento em y para dar uma sensação de movimento conjunto
+    // (mas diminuido pelo 0.5) assim conferindo um aspecto de suavidade durante o pulo.
+    glTranslatef(-position, -height*0.5 - 0.3, -0.5);
 }
 
 void testLines(){
