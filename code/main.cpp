@@ -1,25 +1,24 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include <stdlib.h>
 #include <iostream>
-#include <stdio.h>
 #include <math.h>
 #include "controls.h"
 #include "definitions.h"
-
 #include "dinosaur.h"
 
 using namespace std;
 
 int window_width  = IMAGE_WIDTH;
 int window_height = IMAGE_HEIGHT;
-float lastPosition = 0.0;
 float maxVariation = 0.4;
-float variation = 0.1;
 float velocity;
 
-Dinosaur dino = new Dinosaur();
+Dinosaur *dino = new Dinosaur();
+
+void objectsInitialPositions(){
+	dino->setCoordinateZ(-1.0);
+}
 
 void camera (void) {
 	// Define as opções da perspectiva, como a Field of View, o near plane, etc
@@ -37,7 +36,7 @@ void camera (void) {
 	// sinal negativo em getCoordinate e em todas as outras coordenadas que queremos deslocá-la
     // É colocado getCoordinate Y aqui no deslocamento em y para dar uma sensação de movimento conjunto no
     // momento do pulo (mas diminuido pelo 0.5) assim conferindo um aspecto de suavidade durante o pulo.
-    glTranslatef(-(dino->getCoordinateX), -(dino->getCoordinateY)*0.5 - 0.3, -0.5);
+    glTranslatef( -(dino->getCoordinateX()), -(dino->getCoordinateY())*0.5 - 0.3, -0.5);
 }
 
 void testLines(){
@@ -110,18 +109,6 @@ void testLines(){
 	glPopMatrix();
 }
 
-void testCube(){
-	glPushMatrix();
-		// Aqui o cubo faz o movimento contrário ao da translação
-		// aplicada pela câmera para cancelar com o +moviment dela
-		// e consequentemente permanecer parado
-		glTranslatef(position-0.7, height, -1.0f);
-
-		glColor3f (0.5f, 0.5f, 0.5f);
-		glutSolidCube(0.2); 
-	glPopMatrix();
-}
-
 /*
 void axis(){
 	glPushMatrix();
@@ -162,65 +149,11 @@ void display(void){
 
 	//axis();
 	testLines();
-	testCube();
+	
+	dino->generate();
 
-    if(variation <= maxVariation){
-    	// Faz com que a posição seja incrementada de acordo
-    	// com o valor da variation:
-		position  = position + variation;
-		// A variation cresce linearmente aos poucos para
-		// aumentar a velocidade de movimento:
-		variation += 0.0000055;
-
-	   //--------- Apenas para exibição ----------//
-		velocity = position - lastPosition;
-		lastPosition = position;
-
-    	cout << "velocity = " << velocity << "\n";
-       //--------- -------------------- ----------//
-
-    }else{
-    	// Estagna a variação da posição até aproximadamente
-    	// o valor de maxVariation (variação máxima)
-    	position  = position + variation;
-
-       //--------- Apenas para exibição ----------//
-    	velocity = position - lastPosition;
-		lastPosition = position;
-
-    	cout << "velocity = " << velocity << "\n";
-       //--------- -------------------- ----------//
-    }
-    		
-    // Apenas entra aqui durante uma ação de pulo
-    if(jump){
-    	// Enquanto o objeto não chegar até determinada altura
-    	// o valor de seu height (altura) é incrementado
-    	if(!objectFall){
-    		height += 0.035;
-    		//height = sqrt(height*height + height + 0.01);
-
-    	// Quando o objeto atingi o valor máximo de altura, ele
-    	// começa a cair, ou seja, seu height começa a ser decrementado
-    	}else{
-    		height -= 0.035;
-    		//height = -sqrt(height*height + height + 0.01);
-    	}
-
-    	// Aqui é feito a checagem se o objeto atingiu o valor máximo
-    	// da altura do pulo, se sim, objectFall é colocado como true
-    	if (height >= 0.6) objectFall = true;
-
-    	// Quando o objeto chega ao chão novamente é quando ele para
-    	// de cair e também deixa de pular. Ao apertar o botão de pulo
-    	// o valor de height é definido como 0.1, então essa condição
-    	// efetivamente só é verdadeira no fim do pulo.
-    	if(height <= 0.0){
-    		height = 0.0;		// Sua altura agora é definida como 0
-    		objectFall = false;	// Sua queda agora é definida como falsa
-    		jump = false;		// Assim como seu pulo
-    	}
-    }
+    dino->runAction(maxVariation);
+    dino->jumpAction(&jump);
 
     glutSwapBuffers();
 }
@@ -229,6 +162,9 @@ int main (int argumentsC, char **argumentsV){
 	// Inicialização do Glut (definitions.h)
 	initializations(argumentsC, argumentsV);
 	//enables();
+
+	// Define as posições iniciais de cada objeto no mundo:
+	objectsInitialPositions();
 
     glutDisplayFunc (display);
     glutIdleFunc (display);
