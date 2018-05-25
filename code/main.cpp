@@ -8,15 +8,18 @@
 #include "controls.h"
 #include "definitions.h"
 
+#include "dinosaur.h"
+
 using namespace std;
 
 int window_width  = IMAGE_WIDTH;
 int window_height = IMAGE_HEIGHT;
-float position = 0.0;
 float lastPosition = 0.0;
 float maxVariation = 0.4;
 float variation = 0.1;
 float velocity;
+
+Dinosaur dino = new Dinosaur();
 
 void camera (void) {
 	// Define as opções da perspectiva, como a Field of View, o near plane, etc
@@ -28,14 +31,13 @@ void camera (void) {
     	glRotatef(yRotation,0.0,1.0,0.0);  //rotate our camera on the 
 	}
 
-	// Faz com que a câmera se mova na direção horizontal para a direita (sentido positivo de x),
+	// Faz com que a câmera se mova na direção do dinossauro, ou seja, para a direita (sentido positivo de x),
 	// pois, a partir do momento em que a câmera é fixa na origem, para que ela se mova para um
 	// lado é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
-	// sinal negativo em position e em todas as outras coordenadas que queremos deslocá-la
-    //glTranslatef(-position, -0.3f, -0.5);
-    // É colocado height aqui no deslocamento em y para dar uma sensação de movimento conjunto
-    // (mas diminuido pelo 0.5) assim conferindo um aspecto de suavidade durante o pulo.
-    glTranslatef(-position, -height*0.5 - 0.3, -0.5);
+	// sinal negativo em getCoordinate e em todas as outras coordenadas que queremos deslocá-la
+    // É colocado getCoordinate Y aqui no deslocamento em y para dar uma sensação de movimento conjunto no
+    // momento do pulo (mas diminuido pelo 0.5) assim conferindo um aspecto de suavidade durante o pulo.
+    glTranslatef(-(dino->getCoordinateX), -(dino->getCoordinateY)*0.5 - 0.3, -0.5);
 }
 
 void testLines(){
@@ -115,11 +117,12 @@ void testCube(){
 		// e consequentemente permanecer parado
 		glTranslatef(position-0.7, height, -1.0f);
 
-		glColor3f (0.5f, 0.5f, 0.5df);
+		glColor3f (0.5f, 0.5f, 0.5f);
 		glutSolidCube(0.2); 
 	glPopMatrix();
 }
 
+/*
 void axis(){
 	glPushMatrix();
 		glTranslatef(-position-0.6, height, -1.0f);
@@ -144,6 +147,7 @@ void axis(){
 		glEnd();
 	glPopMatrix();
 }
+*/
 
 void display(void){
 	// Define a cor de limpeza do:

@@ -1,5 +1,9 @@
-#ifndef _DEFINITIONS_H_
-#define _DEFINITIONS_H_
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+
+#ifndef DEFINITIONS_H
+#define DEFINITIONS_H
 
 #define PI 3.141592653589793
 #define IMAGE_WIDTH  768
@@ -32,4 +36,4 @@ void initializations(int argumentsC, char **argumentsV){
     glutCreateWindow ("Dino Runner");
 }
 
-#endif
+#endif	// DEFINITIONS_H

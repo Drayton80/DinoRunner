@@ -4,8 +4,8 @@
 #include <math.h>
 #include "definitions.h"
 
-#ifndef _CONTROLS_H_
-#define _CONTROLS_H_
+#ifndef CONTROLS_H
+#define CONTROLS_H
 
 #define SPACE_BAR_KEY 32	// Código ASCII para a barra de espaço
 #define ESC_KEY 27			// Código ASCII para a tecla de escape
@@ -17,7 +17,6 @@ float yRotation = 0;
 float intensity = 0.1;
 float height = 0.0;
 bool jump = false;
-bool objectFall = false;
 float lastX, lastY;
 
 /* Descrição: função criada para ser colocada como parâmetro de entrada
@@ -135,5 +134,5 @@ void controlsDefinitions(){
 	glutPassiveMotionFunc(mouseMovement);
 }
 
-#endif
+#endif	// CONTROLS_H
 
