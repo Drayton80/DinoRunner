@@ -28,9 +28,12 @@ void camera (void) {
     	glRotatef(yRotation,0.0,1.0,0.0);  //rotate our camera on the 
 	}
 
-	// Faz com que a câmera se mova na direção horizontal, pois seu eixo x é inverso
-	// ao do universo, já que ela olha de forma "contrária" a ele
+	// Faz com que a câmera se mova na direção horizontal para a direita (sentido positivo de x),
+	// pois, a partir do momento em que a câmera é fixa na origem, para que ela se mova para um
+	// lado, é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
+	// sinal negativo em position.
     glTranslatef(-position, -0.3f, -0.5);
+    //glTranslatef(-position, -height-0.3, -0.5);
 }
 
 void testLines(){
@@ -110,7 +113,7 @@ void testCube(){
 		// e consequentemente permanecer parado
 		glTranslatef(position-0.7, height, -1.0f);
 
-		glColor3f (1.0f, 0.0f, 0.0f);
+		glColor3f (0.5f, 0.5f, 0.5df);
 		glutSolidCube(0.2); 
 	glPopMatrix();
 }
@@ -156,39 +159,60 @@ void display(void){
 	testCube();
 
     if(variation <= maxVariation){
+    	// Faz com que a posição seja incrementada de acordo
+    	// com o valor da variation:
 		position  = position + variation;
+		// A variation cresce linearmente aos poucos para
+		// aumentar a velocidade de movimento:
 		variation += 0.0000055;
 
+	   //--------- Apenas para exibição ----------//
 		velocity = position - lastPosition;
 		lastPosition = position;
 
     	cout << "velocity = " << velocity << "\n";
+       //--------- -------------------- ----------//
+
     }else{
+    	// Estagna a variação da posição até aproximadamente
+    	// o valor de maxVariation (variação máxima)
     	position  = position + variation;
 
+       //--------- Apenas para exibição ----------//
     	velocity = position - lastPosition;
 		lastPosition = position;
 
     	cout << "velocity = " << velocity << "\n";
+       //--------- -------------------- ----------//
     }
     		
-
+    // Apenas entra aqui durante uma ação de pulo
     if(jump){
+    	// Enquanto o objeto não chegar até determinada altura
+    	// o valor de seu height (altura) é incrementado
     	if(!objectFall){
     		height += 0.035;
     		//height = sqrt(height*height + height + 0.01);
+
+    	// Quando o objeto atingi o valor máximo de altura, ele
+    	// começa a cair, ou seja, seu height começa a ser decrementado
     	}else{
     		height -= 0.035;
     		//height = -sqrt(height*height + height + 0.01);
     	}
 
-    	if (height >= 0.5) objectFall = true;
+    	// Aqui é feito a checagem se o objeto atingiu o valor máximo
+    	// da altura do pulo, se sim, objectFall é colocado como true
+    	if (height >= 0.6) objectFall = true;
 
+    	// Quando o objeto chega ao chão novamente é quando ele para
+    	// de cair e também deixa de pular. Ao apertar o botão de pulo
+    	// o valor de height é definido como 0.1, então essa condição
+    	// efetivamente só é verdadeira no fim do pulo.
     	if(height <= 0.0){
-    		height = 0.0;
-    		velocity = 1.0;
-    		objectFall = false;
-    		jump = false;
+    		height = 0.0;		// Sua altura agora é definida como 0
+    		objectFall = false;	// Sua queda agora é definida como falsa
+    		jump = false;		// Assim como seu pulo
     	}
     }
 

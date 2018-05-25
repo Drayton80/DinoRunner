@@ -31,12 +31,15 @@ float lastX, lastY;
  */
 void keyboard (unsigned char key, int x, int y) {
     if (key == 'w' || key == SPACE_BAR_KEY){
-    	// TO DO Jump
-    	jump = true;
-    	height += 0.1;
+    	// Apenas executa as mudanças do pulo se jump for igual a false, sendo isso
+    	// feito para que o usuário não execute um outro pulo no meio do pulo
+    	if(!jump){
+    		jump = true;
+    		height += 0.1;
 
-    	if(fpsActive){
-    		// TO DO Jump moviment if camera Jump
+    		if(fpsActive){
+	    		// TO DO Jump moviment if camera Jump
+	    	}
     	}
     }
 
