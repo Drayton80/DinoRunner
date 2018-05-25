@@ -109,7 +109,7 @@ void Cactus::generate(){
         //       e qualquer mudança de escala o deslocaria implicitamente
 
         // Define a cor do objeto:
-        glColor3f (0.0f, 0.0f, 0.5f);
+        glColor3f (0.0f, 1.0f, 0.0f);
         // Exibe o objeto:
         glutSolidCube(0.5); 
     glPopMatrix();

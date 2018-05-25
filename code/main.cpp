@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <cstdlib>
 #include <iostream>
 #include <math.h>
 #include "controls.h"
@@ -11,14 +12,25 @@
 using namespace std;
 
 Dinosaur *dino = new Dinosaur();	// Instanciação de nosso dinossauro corredor
-Cactus *cacti[5];						// Sim, cacto no plural em inglês é cacti
+Cactus *cactiPath[5];				// Sim, cacto no plural em inglês é cacti
+Cactus *cactiScene1[100];
+Cactus *cactiScene2[100];
+
+unsigned short int cactiSceneArraySize = sizeof(cactiScene1)/sizeof(cactiScene1[0]);
+unsigned short int cactiLimit = 150;
+unsigned int cactiGenerateEnd = 150;
+bool cactiGenerateSwitch = true;
+float randomX;
 
 void objectsInitialPositions(){
 	dino->setCoordinateZ(-1.0);
 
-	cacti[0] = new Cactus(15.0f, 0.0f, -1.0f);
-	cacti[1] = new Cactus(5.0f, 0.0f, -1.0f);
-	cacti[2] = new Cactus(1.0f, 0.0f, -1.0f);
+	for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+		randomX = rand()%cactiGenerateEnd + 1;
+
+		cactiScene1[i] = new Cactus(randomX-cactiLimit, 0.0, -(rand()%70 + 2));
+		cactiScene2[i] = new Cactus(randomX           , 0.0, -(rand()%70 + 2));
+	}
 }
 
 void camera (void) {
@@ -59,43 +71,44 @@ void testLines(){
 			switch(rgbSwitch){
 				case 1:
 					redIncrement  += 0.2;
-					blueIncrement  = 0.0;
 					greenIncrement = 0.0;
+					blueIncrement  = 0.0;
 
 					if(redIncrement > 1.0){
-						blueIncrement = 0.3;
+						greenIncrement = 0.3;
 						rgbSwitch = 2;
 					}
 
 					break;
 				case 2:
-					redIncrement   = 0.0;
-					blueIncrement += 0.2;
-					greenIncrement = 0.0;
+					redIncrement    = 0.0;
+					greenIncrement += 0.2;
+					blueIncrement   = 0.0;
 
-					if(blueIncrement > 1.0){
-						greenIncrement = 0.3;
+					if(greenIncrement > 1.0){
+						blueIncrement = 0.3;
 						rgbSwitch = 3;
 					}
 
 					break;
 				case 3:
-					redIncrement    = 0.0;
-					blueIncrement   = 0.0;
-					greenIncrement += 0.2;
+					redIncrement   = 0.0;
+					greenIncrement = 0.0;
+					blueIncrement += 0.2;
 
-					if(greenIncrement > 1.0){
+					if(blueIncrement > 1.0){
 						redIncrement = 0.3;
 						rgbSwitch = 1;
 					}
 
 					break;
+					
 			}
 
 			// Exibição das linhas:
 			glBegin(GL_LINES);
 				// Linhas Verticais:
-				glColor3f (redIncrement, blueIncrement, greenIncrement);
+				glColor3f (redIncrement, greenIncrement, blueIncrement);
 				glVertex3f( (float) i, -0.2f, -1000.0f);
 				glVertex3f( (float) i, -0.2f,  1000.0f);
 
@@ -149,18 +162,38 @@ void display(void){
 	camera();
 
 	testLines();
+
+	if(cactiGenerateEnd-25 <= dino->getCoordinateX()){
+		cactiGenerateEnd += cactiLimit;
+
+		if(cactiGenerateSwitch){
+			for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+				randomX = rand()%cactiGenerateEnd + 1 + cactiGenerateEnd - cactiLimit;
+
+				cactiScene1[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+			}
+
+			cactiGenerateSwitch = !cactiGenerateSwitch;
+		}else{
+			for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+				randomX = rand()%cactiGenerateEnd + 1 + cactiGenerateEnd - cactiLimit;
+
+				cactiScene2[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+			}
+
+			cactiGenerateSwitch = !cactiGenerateSwitch;
+		}
+	}
+
+	for(int i = 0; i < cactiSceneArraySize; i++){
+		cactiScene1[i]->generate();
+		cactiScene2[i]->generate();
+	}
 	
 	dino->generate();
 
     dino->runAction();
     dino->jumpAction(&jump);
-
-    //cacti[0]->setCoordinateX(cacti[0]->getCoordinateX() + dino->getCoordinateX()*0.5);
-	cacti[0]->generate();
-	//cacti[1]->setCoordinateX(cacti[1]->getCoordinateX());
-	cacti[1]->generate();
-	//cacti[2]->setCoordinateX(cacti[2]->getCoordinateX() + dino->getCoordinateX());
-	cacti[2]->generate();
 
     glutSwapBuffers();
 }
