@@ -11,8 +11,6 @@ using namespace std;
 
 int window_width  = IMAGE_WIDTH;
 int window_height = IMAGE_HEIGHT;
-float maxVariation = 0.4;
-float velocity;
 
 Dinosaur *dino = new Dinosaur();
 
@@ -152,7 +150,7 @@ void display(void){
 	
 	dino->generate();
 
-    dino->runAction(maxVariation);
+    dino->runAction();
     dino->jumpAction(&jump);
 
     glutSwapBuffers();
