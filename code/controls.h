@@ -14,7 +14,10 @@
 bool  fpsActive = false;
 float xRotation = 0;
 float yRotation = 0;
-float intensity = 1;
+float intensity = 0.1;
+float height = 0.0;
+bool jump = false;
+bool objectFall = false;
 float lastX, lastY;
 
 /* Descrição: função criada para ser colocada como parâmetro de entrada
@@ -29,6 +32,8 @@ float lastX, lastY;
 void keyboard (unsigned char key, int x, int y) {
     if (key == 'w' || key == SPACE_BAR_KEY){
     	// TO DO Jump
+    	jump = true;
+    	height += 0.1;
 
     	if(fpsActive){
     		// TO DO Jump moviment if camera Jump
@@ -37,9 +42,9 @@ void keyboard (unsigned char key, int x, int y) {
 
     // Se o TAB for pressionado muda entre os dois possíveis
     // modos de câmera:
-    if (key == TAB){
+    if (key == TAB_KEY){
     	// Alterna a variável fpsActive entre 0 e 1
-    	// caso o TABA seja apertado, isso serve para trocar
+    	// caso o TAB seja apertado, isso serve para trocar
     	// o como de câmera de FPS para o normal e vice versa
     	if(fpsActive){
     		fpsActive = false;
@@ -66,7 +71,7 @@ void keyboard (unsigned char key, int x, int y) {
  *     x: coordenada X atual do mouse no momento que a tecla hey foi pressionada.
  *     y: coordenada Y atual do mouse no momento que a tecla key foi pressionada.
  */
-void keyboardSpecial (unsigned char key, int x, int y){
+void keyboardSpecial (int key, int x, int y){
 	// Ao pressionar a Seta para Cima aumenta a Intenisdade da rotação da câmera
 	if (key == GLUT_KEY_UP){
 		// Se a intensidade for menor que 2 (valor máximo de
@@ -116,6 +121,15 @@ void mouseMovement(int x, int y) {
 	    xRotation += (float) variationX * intensity; 
 	    yRotation += (float) variationY * intensity;    
 	}
+}
+
+/* Descrição: Passa as funções aqui criadas para suas respectivas chamadas nas funções
+ * da biblioteca Glut.
+ */
+void controlsDefinitions(){
+	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(keyboardSpecial);
+	glutPassiveMotionFunc(mouseMovement);
 }
 
 #endif
