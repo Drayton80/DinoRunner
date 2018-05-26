@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include "object.h"
 
 using namespace std;
 
@@ -12,36 +13,35 @@ using namespace std;
  *    classe referente ao objeto dinossauro, personagem principal
  *    da corrida contra o meteoro.
  */
-class Dinosaur{
+class Dinosaur:public Object{
 public:
     // Prototipação do Construtor:
     Dinosaur();
+    Dinosaur(float currentX, float currentY, float currentZ);
+    Dinosaur(float currentX, float currentY, float currentZ,
+             bool  rotateX , bool  rotateY , bool   rotateZ,
+             float angle   , float newSize);
 
     // Prototipação dos Métodos de Propósito Geral:
-    void generate();
     void runAction();
     void jumpAction(bool *jumping, float *descendForced);
 
-    // Prototipação dos Métodos Get:
-    float getCoordinateX();
-    float getCoordinateY();
-    float getCoordinateZ();
-    // Prototipação dos Métodos Set:
-    void setCoordinateX(float currentX);
-    void setCoordinateY(float currentY);
-    void setCoordinateZ(float currentZ);
+    // Métodos Get:
+    float getVariationX();
+    float getMaxVariationX();
+    float getVariationY();
+
+    // Métodos Set:
+    void setVariationX(float newVariationX);
+    void setMaxVariationX(float newMaxVariationX);
+    void setVariationY(float newVariationY);
 
 private:
-    // Coordenadas do objeto:
-    float coordinateX;
-    float coordinateY;
-    float coordinateZ;
-
     // Atributos que guardam informações sobre a variação
-    // do objeto em determinado instante
-    float variationX;       // Variação Atual
+    // do objeto em determinado instante no respectivo eixo
+    float variationX;       // Variação Atual do movimento
     float maxVariationX;    // Variação Máxima
-    float variationY;
+    float variationY;       // Variação atual do pulo
 
     // Apenas para exibição de testes:
     float lastCoordinateX = 0.0;
@@ -51,11 +51,62 @@ private:
 // CONSTRUTOR //----------------------//
 
 Dinosaur::Dinosaur(){
+    // Atributos herdados:
     coordinateX = 0.0;
     coordinateY = 0.0;
     coordinateZ = 0.0;
 
-    //variationX = 0.08;
+    rotationX = false;
+    rotationY = false;
+    rotationZ = false;
+    rotationAngle = 0.0;
+
+    size = 1.0;
+
+    // Atributos da Classe:
+    variationX = 0;
+    maxVariationX = 0.5;
+
+    variationY = 0.17;   
+}
+
+Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
+    // Atributos herdados:
+    coordinateX = currentX;
+    coordinateY = currentY;
+    coordinateZ = currentZ;
+
+    rotationX = false;
+    rotationY = false;
+    rotationZ = false;
+    rotationAngle = 0.0;
+
+    size = 1.0;
+
+    // Atributos da Classe:
+    variationX = 0;
+    maxVariationX = 0.5;
+
+    variationY = 0.17;   
+}
+
+Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
+                   bool  rotateX , bool  rotateY , bool  rotateZ ,
+                   float angle   , float newSize){
+
+    // Atributos herdados:
+    coordinateX = currentX;
+    coordinateY = currentY;
+    coordinateZ = currentZ;
+
+    rotationX = rotateX;
+    rotationY = rotateY;
+    rotationZ = rotateZ;
+    rotationAngle = angle;
+
+    size = newSize;
+
+    // Atributos da Classe:
     variationX = 0;
     maxVariationX = 0.5;
 
@@ -66,28 +117,6 @@ Dinosaur::Dinosaur(){
 
 
 // MÈTODOS DE PROPÒSITO GERAL //---------------------------------------------------//
-
-/* Método Generate:  
- *   Descrição: 
- *     Faz a geração do objeto e define sua posição, tamanho, rotação, cor, etc, ou
- *     seja, todas as informações acerca de suas características no espaço do universo,
- *     usualmente sendo chamado a cada frame de exibição para poder gerar novamente
- *     sua exibição;
- */
-void Dinosaur::generate(){
-    glPushMatrix();
-        // Aqui o cubo faz o movimento contrário ao da translação
-        // aplicada pela câmera para cancelar com o +moviment dela
-        // e consequentemente permanecer parado
-        glTranslatef(coordinateX-1.7, coordinateY, coordinateZ);
-        //glTranslatef(coordinateX, coordinateY, coordinateZ);
-
-         // Define a cor do objeto:
-        glColor3f (0.5f, 0.5f, 0.5f);
-        // Exibe o objeto:
-        glutSolidCube(0.5); 
-    glPopMatrix();
-}
 
 /* Método Run Action:  
  *   Descrição: 
@@ -177,29 +206,29 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
 // MÈTODOS GET E SET //----------------------------//
 
 // Métodos Get:
-float Dinosaur::getCoordinateX(){
-    return coordinateX;
+float Dinosaur::getVariationX(){
+    return variationX;
 }
 
-float Dinosaur::getCoordinateY(){
-    return coordinateY;
+float Dinosaur::getMaxVariationX(){
+    return maxVariationX;
 }
 
-float Dinosaur::getCoordinateZ(){
-    return coordinateZ;
+float Dinosaur::getVariationY(){
+    return variationY;
 }
 
 // Métodos Set:
-void Dinosaur::setCoordinateX(float currentX){
-    coordinateX = currentX;
+void Dinosaur::setVariationX(float newVariationX){
+    variationX = newVariationX;
 }
 
-void Dinosaur::setCoordinateY(float currentY){
-    coordinateY = currentY;
+void Dinosaur::setMaxVariationX(float newMaxVariationX){
+    maxVariationX = newMaxVariationX;
 }
 
-void Dinosaur::setCoordinateZ(float currentZ){
-    coordinateZ = currentZ;
+void Dinosaur::setVariationY(float newVariationY){
+    variationY = newVariationY;
 }
 
 //-------------------//----------------------------//

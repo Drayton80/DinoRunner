@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <math.h>
 #include "definitions.h"
+#include "object.h"
 
 #ifndef CONTROLS_H
 #define CONTROLS_H

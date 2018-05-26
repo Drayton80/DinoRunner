@@ -127,6 +127,7 @@ int randomCactiOnPath(unsigned short int *j, Cactus **cactiSceneOnPath,
 
 void objectsInitialPositions(){
 	dino->setCoordinateZ(-1.0);
+	dino->setCoordinateX(-1.7);
 
 	// Aqui é verificado qual o maior de todos os sizes, comparando primeiramente behind com onPath
 	// e depois forward com o resultado anterior
@@ -180,7 +181,10 @@ void camera (void) {
 	// sinal negativo em getCoordinate e em todas as outras coordenadas que queremos deslocá-la
     // É colocado getCoordinate Y aqui no deslocamento em y para dar uma sensação de movimento conjunto no
     // momento do pulo (mas diminuido pelo vezes 0.3) assim conferindo um aspecto de suavidade durante o pulo.
-    glTranslatef( -(dino->getCoordinateX()), -(dino->getCoordinateY())*0.3 - 0.7, -2.5);
+    // Como a câmera é fixa no dinossauro também em relação ao X, para fazer com que ele fique um pouco deslocado
+    // para a esquerda (posicionado no canto esquerdo da tela) em relação à câmera basta somar uma constante
+    // com o getCoordinateX
+    glTranslatef( -(dino->getCoordinateX()+1.7), -(dino->getCoordinateY())*0.3 - 0.7, -2.5);
 }
 
 void testLines(){
@@ -428,7 +432,7 @@ void display(void){
 
 	}
 	
-	dino->generate();
+	dino->generate(0.4f, 0.4f, 0.4f);
 
 	for(unsigned short int i = 0; i < cactiSceneForwardSize; i++){
 
