@@ -55,10 +55,11 @@ Dinosaur::Dinosaur(){
     coordinateY = 0.0;
     coordinateZ = 0.0;
 
-    variationX = 0.08;
+    //variationX = 0.08;
+    variationX = 0;
     maxVariationX = 0.5;
 
-    variationY = 0.15;   
+    variationY = 0.17;   
 }
 
 //------------//----------------------//
@@ -96,7 +97,9 @@ void Dinosaur::generate(){
 void Dinosaur::runAction(){
     float velocity;
 
-    if(variationX <= maxVariationX){
+    // O dinossauro só corre se estiver em movimento, pois ele inicia o jogo
+    // parado
+    if(0 < variationX && variationX <= maxVariationX){
         // Faz com que a posição seja incrementada de acordo
         // com o valor da variationX:
         coordinateX  = coordinateX + variationX;
@@ -111,7 +114,7 @@ void Dinosaur::runAction(){
         cout << "velocity = " << velocity << "\n";
        //--------- -------------------- ----------//
 
-    }else{
+    }else if(maxVariationX <= variationX){
         // Estagna a variação da posição até aproximadamente
         // o valor de maxVariationX (variação máxima)
         coordinateX  = coordinateX + variationX;
@@ -155,10 +158,15 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
         // efetivamente só é verdadeira no fim do pulo.
         if(coordinateY <= 0.0){
             coordinateY = 0.0;      // Sua altura agora é definida como 0
-            variationY = 0.15;      // Retorna variationY para seu valor default
+            variationY = 0.17;      // Retorna variationY para seu valor default
 
             *descendForced = 0.0;   // Volta descendForced para seu valor default
             *jumping = false;       // O pulo acabou
+
+            // O dinossauro inicia parado e apenas começa a correr dps do primeiro salto
+            if(variationX <= 0){
+                variationX = 0.08;
+            }
         }
     }
 }

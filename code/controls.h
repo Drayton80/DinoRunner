@@ -47,7 +47,7 @@ void keyboard (unsigned char key, int x, int y) {
     	// Enquanto estiver durante a ação do pulo, é possível apertar a tecla s
     	// para descer mais rapidamente
     	if(jump){
-    		descend = -0.1;
+    		descend = -0.15;
 
     		if(fpsActive){
 	    		// TO DO Jump moviment if camera Jump
