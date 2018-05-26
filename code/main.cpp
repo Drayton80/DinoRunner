@@ -13,11 +13,16 @@ using namespace std;
 
 Dinosaur *dino = new Dinosaur();	// Instanciação de nosso dinossauro corredor
 Cactus *cactiPath[5];				// Sim, cacto no plural em inglês é cacti
-Cactus *cactiScene1[50];
-Cactus *cactiScene2[50];
-Cactus *cactiScene3[50];
+Cactus *cactiSceneBehind1[100];
+Cactus *cactiSceneBehind2[100];
+Cactus *cactiSceneBehind3[100];
 
-unsigned short int cactiSceneArraySize = sizeof(cactiScene1)/sizeof(cactiScene1[0]);
+Cactus *cactiSceneForward1[5];
+Cactus *cactiSceneForward2[5];
+Cactus *cactiSceneForward3[5];
+
+unsigned short int cactiSceneBehindSize  = sizeof(cactiSceneBehind1) /sizeof(cactiSceneBehind1[0] );
+unsigned short int cactiSceneForwardSize = sizeof(cactiSceneForward1)/sizeof(cactiSceneForward1[0]);
 unsigned short int cactiLimit = 150;
 unsigned int cactiGenerateEnd = 150;
 short int cactiGenerateSwitch = 0;
@@ -26,12 +31,19 @@ float randomX;
 void objectsInitialPositions(){
 	dino->setCoordinateZ(-1.0);
 
-	for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+	for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
 		randomX = rand()%cactiGenerateEnd + 1;
 
-		cactiScene1[i] = new Cactus(randomX-cactiLimit, 0.0, -(rand()%70 + 2));
-		cactiScene2[i] = new Cactus(randomX           , 0.0, -(rand()%70 + 2));
-		cactiScene3[i] = new Cactus(randomX+cactiLimit, 0.0, -(rand()%70 + 2));
+		cactiSceneBehind1[i] = new Cactus(randomX-cactiLimit, 0.0, -(rand()%70 + 2));
+		cactiSceneBehind2[i] = new Cactus(randomX           , 0.0, -(rand()%70 + 2));
+		cactiSceneBehind3[i] = new Cactus(randomX+cactiLimit, 0.0, -(rand()%70 + 2));
+
+		if(i < cactiSceneForwardSize){
+
+			cactiSceneForward1[i] = new Cactus(randomX-cactiLimit, 0.0, -(rand()%1));
+			cactiSceneForward2[i] = new Cactus(randomX           , 0.0, -(rand()%1));
+			cactiSceneForward3[i] = new Cactus(randomX+cactiLimit, 0.0, -(rand()%1));
+		}
 	}
 }
 
@@ -170,10 +182,15 @@ void display(void){
 
 		switch(cactiGenerateSwitch){
 			case 0:
-				for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+				for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
 					randomX = rand()%cactiLimit + 1 + cactiGenerateEnd;
 
-					cactiScene1[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+					cactiSceneBehind1[i]  = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+
+					if(i < cactiSceneForwardSize){
+
+						cactiSceneForward1[i] = new Cactus(randomX, 0.0, -(rand()%1));
+					}
 				}
 
 				cactiGenerateSwitch = 1;
@@ -181,10 +198,15 @@ void display(void){
 				break;
 
 			case 1:
-				for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+				for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
 					randomX = rand()%cactiLimit + 1 + cactiGenerateEnd;
 
-					cactiScene2[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+					cactiSceneBehind2[i]  = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+
+					if(i < cactiSceneForwardSize){
+
+						cactiSceneForward2[i] = new Cactus(randomX, 0.0, -(rand()%1));
+					}
 				}
 
 				cactiGenerateSwitch = 2;
@@ -192,10 +214,15 @@ void display(void){
 				break;
 
 			case 2:
-				for(unsigned short int i = 0; i < cactiSceneArraySize; i++){
+				for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
 					randomX = rand()%cactiLimit + 1 + cactiGenerateEnd;
 
-					cactiScene3[i] = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+					cactiSceneBehind3[i]  = new Cactus(randomX, 0.0, -(rand()%70 + 2));
+
+					if(i < cactiSceneForwardSize){
+
+						cactiSceneForward3[i] = new Cactus(randomX, 0.0, -(rand()%1));
+					}
 				}
 
 				cactiGenerateSwitch = 0;
@@ -206,16 +233,31 @@ void display(void){
 
 	}
 
-	for(int i = 0; i < cactiSceneArraySize; i++){
-		cactiScene1[i]->generate();
-		cactiScene2[i]->generate();
-		cactiScene3[i]->generate();
+	for(int i = 0; i < cactiSceneBehindSize; i++){
+		cactiSceneBehind1[i]->generate();
+		cactiSceneBehind2[i]->generate();
+		cactiSceneBehind3[i]->generate();
+
+		if(i < cactiSceneForwardSize){
+
+			cactiSceneForward1[i]->generate();
+			cactiSceneForward2[i]->generate();
+			cactiSceneForward3[i]->generate();
+		}
+
 	}
 	
 	dino->generate();
 
+	for(int i = 0; i < cactiSceneForwardSize; i++){
+
+		cactiSceneForward1[i]->generate();
+		cactiSceneForward2[i]->generate();
+		cactiSceneForward3[i]->generate();
+	}
+
     dino->runAction();
-    dino->jumpAction(&jump);
+    dino->jumpAction(&jump, &descend);
 
     glutSwapBuffers();
 }

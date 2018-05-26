@@ -16,6 +16,7 @@ float xRotation = 0;
 float yRotation = 0;
 float intensity = 0.1;
 float height = 0.0;
+float descend = 0.0;
 bool jump = false;
 float lastX, lastY;
 
@@ -35,6 +36,18 @@ void keyboard (unsigned char key, int x, int y) {
     	if(!jump){
     		jump = true;
     		height += 0.1;
+
+    		if(fpsActive){
+	    		// TO DO Jump moviment if camera Jump
+	    	}
+    	}
+    }
+
+    if(key == 's'){
+    	// Enquanto estiver durante a ação do pulo, é possível apertar a tecla s
+    	// para descer mais rapidamente
+    	if(jump){
+    		descend = -0.1;
 
     		if(fpsActive){
 	    		// TO DO Jump moviment if camera Jump

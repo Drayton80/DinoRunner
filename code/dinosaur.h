@@ -20,7 +20,7 @@ public:
     // Prototipação dos Métodos de Propósito Geral:
     void generate();
     void runAction();
-    void jumpAction(bool *jumping);
+    void jumpAction(bool *jumping, float *descendForced);
 
     // Prototipação dos Métodos Get:
     float getCoordinateX();
@@ -43,9 +43,6 @@ private:
     float maxVariationX;    // Variação Máxima
     float variationY;
 
-    // Define se o objeto está caindo ou não:
-    bool falling;
-
     // Apenas para exibição de testes:
     float lastCoordinateX = 0.0;
 };
@@ -58,13 +55,10 @@ Dinosaur::Dinosaur(){
     coordinateY = 0.0;
     coordinateZ = 0.0;
 
-    //variationX = 0.08;
-    variationX = 0.2;
+    variationX = 0.08;
     maxVariationX = 0.5;
 
     variationY = 0.15;   
-
-    falling = false;
 }
 
 //------------//----------------------//
@@ -141,35 +135,30 @@ void Dinosaur::runAction(){
  *       É um boolean que define se o objeto está pulando ou não, ele
  *       definido como um ponteiro pois o estado de pulo deve ser alterado
  *       também em controls.h, já que é lá onde fica definido as teclas e
- *       suas respectivas consequências quando pressionadas   
+ *       suas respectivas consequências quando pressionadas
+ *     float *descendForced:
+ *       Define uma velocidade de descida forçada pelo objeto durante o salto,
+ *       sendo um ponteiro pois no fim do pulo é necessário redefinir descendForced
+ *       para o seu valor original de 0.0
  */
-void Dinosaur::jumpAction(bool *jumping){
+void Dinosaur::jumpAction(bool *jumping, float *descendForced){
     // Apenas entra aqui durante uma ação de pulo
     if(*jumping){
-        // Enquanto o objeto não chegar até determinada altura
-        // o valor de sua coordinateY (altura) é incrementada
-        if(!falling){
-            coordinateY += variationY;
-            variationY -= 0.007;
-            //coordinateY = sqrt(coordinateY*coordinateY + coordinateY + 0.01);
-
-        // Quando o objeto atingi o valor máximo de altura, ele
-        // começa a cair, ou seja, sua coordinateY começa a ser decrementada
-        }
-
-        // Aqui é feito a checagem se o objeto atingiu o valor máximo
-        // da altura do pulo, se sim, falling é colocado como true
-        //if (coordinateY >= 2.5) falling = true;
+        // A coordenada Y é incrementada de acordo com a variationY, que, por sua
+        // vez, é decrementada linearmente a cada interação
+        coordinateY += variationY + *descendForced;
+        variationY -= 0.007;
 
         // Quando o objeto chega ao chão novamente é quando ele para
         // de cair e também deixa de pular. Ao apertar o botão de pulo
-        // o valor de coordinateY é definido como 0.1, então essa condição
+        // o valor de coordinateY é definido como diferente de 0, então essa condição
         // efetivamente só é verdadeira no fim do pulo.
         if(coordinateY <= 0.0){
             coordinateY = 0.0;      // Sua altura agora é definida como 0
-            variationY = 0.15;
-            falling  = false;       // Sua queda agora é definida como falsa
-            *jumping = false;       // assim como seu pulo
+            variationY = 0.15;      // Retorna variationY para seu valor default
+
+            *descendForced = 0.0;   // Volta descendForced para seu valor default
+            *jumping = false;       // O pulo acabou
         }
     }
 }
