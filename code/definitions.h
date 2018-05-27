@@ -14,7 +14,7 @@
 void enables(){
 	glEnable (GL_DEPTH_TEST); 	// Habilita o test de profundidade
     glEnable (GL_LIGHTING); 	// Habilita a iluminação
-    glEnable (GL_LIGHT0); 		// Habilita a luz difusa 0
+    glEnable (GL_LIGHT0); 		// Habilita a luz difusa (Light 0)
 }
 
 // Inicializa o Glut e abre a janela do programa:

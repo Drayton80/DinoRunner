@@ -7,13 +7,13 @@
 #include "controls.h"
 #include "definitions.h"
 #include "dinosaur.h"
+#include "pterodactylus.h"
 #include "object.h"
 #include "random.h"
 
 using namespace std;
 
-Dinosaur *dino = new Dinosaur();	// Instanciação de nosso dinossauro corredor
-Object *cactusManager = new Object();
+Dinosaur *dino = new Dinosaur();	// Instanciação do dinossauro corredor
 
 Object *cactiSceneBehind1[100];
 Object *cactiSceneBehind2[100];
@@ -27,10 +27,16 @@ Object *cactiSceneForward1[5];
 Object *cactiSceneForward2[5];
 Object *cactiSceneForward3[5];
 
+Pterodactylus *pteros1[50];
+Pterodactylus *pteros2[50];
+Pterodactylus *pteros3[50];
+
 int cactiSceneBehindSize  = sizeof(cactiSceneBehind1) /sizeof(cactiSceneBehind1[0] );
 int cactiSceneOnPathSize  = sizeof(cactiSceneOnPath1) /sizeof(cactiSceneOnPath1[0] );
 int cactiSceneForwardSize = sizeof(cactiSceneForward1)/sizeof(cactiSceneForward1[0]);
-int cactiSceneBiggerSize; 
+int cactiSceneBiggerSize;
+
+int pterosSize = sizeof(pteros1) /sizeof(pteros1[0]);
 
 unsigned short int cactiLimit = 150;
 unsigned int cactiGenerateBegin = 150;
@@ -38,6 +44,9 @@ short int cactiGenerateSwitch = 0;
 
 int fillBar = 0;
 int fillBarLimit = 20;
+
+int fillBarPteros = 0;
+int fillBarLimitPteros = 30;
 
 
 
@@ -65,6 +74,12 @@ void objectsInitialPositions(){
 		cactiSceneOnPath2[i] = new Object();
 		cactiSceneOnPath3[i] = new Object();
 
+    }
+
+    for(unsigned short int i = 0; i < pterosSize; i++){
+    	pteros1[i] = new Pterodactylus();
+    	pteros2[i] = new Pterodactylus();
+    	pteros3[i] = new Pterodactylus();
     }
 
 	for(int i = 0, j = 0, k = 0, l = 0; i < cactiSceneBiggerSize; i++, j++, k++, l++){
@@ -101,7 +116,8 @@ void objectsInitialPositions(){
 		// Gera cactos do intervalo de 150 até 300 na coordenada X relativa ao l atual
 		randomCactiOnPath(&l, dino->getCoordinateZ(), cactiSceneOnPath3, cactiSceneOnPathSize, 153,
                           &fillBar, fillBarLimit);
-		
+
+
 		if(i < cactiSceneForwardSize){
 
 			cactiSceneForward1[i] = new Object(randomX-cactiLimit, 0.0, -(rand()%1));
@@ -147,8 +163,8 @@ void objectsNextPositions(){
 					              cactiSceneOnPathSize, cactiGenerateBegin,
                                   &fillBar, fillBarLimit);
 				
-				
-			
+				randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros1, pterosSize, cactiGenerateBegin, 
+			                              &fillBarPteros, fillBarLimitPteros);
 
 				if(i < cactiSceneForwardSize){
 					// Define novas coordenadas para os cactos da frente:
@@ -179,7 +195,9 @@ void objectsNextPositions(){
 				randomCactiOnPath(&j, dino->getCoordinateZ(), cactiSceneOnPath2, 
 						          cactiSceneOnPathSize, cactiGenerateBegin,
                                   &fillBar, fillBarLimit);
-					
+				
+				randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros2, pterosSize, cactiGenerateBegin, 
+			                              &fillBarPteros, fillBarLimitPteros);
 				
 
 				if(i < cactiSceneForwardSize){
@@ -202,7 +220,6 @@ void objectsNextPositions(){
 					cactiSceneBehind3[i]->setCoordinateX(randomX);
 					cactiSceneBehind3[i]->setCoordinateZ(-(rand()%74 + 2));
 				}
-
 			
 				// A alternação entre 3 cactiSceneOnPath é feita aqui novamente para 
 				// gerar aleatoriamente sem que o jogador perceba e para que não sejam
@@ -213,7 +230,9 @@ void objectsNextPositions(){
                                   &fillBar, fillBarLimit);
 					
 				
-				
+				randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros3, pterosSize, cactiGenerateBegin, 
+			                              &fillBarPteros, fillBarLimitPteros);
+
 
 				if(i < cactiSceneForwardSize){
 					// Define novas coordenadas para os cactos da frente:
@@ -342,34 +361,41 @@ void display(void){
 	}
 
 	// Aqui ocorre a geração dos objetos atrás do dinossauro em relação à câmera (no modo câmera padrão)
-	for(unsigned short int i = 0; i < cactiSceneBiggerSize; i++){
+	for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
 
-		if(i < cactiSceneBehindSize){
-
-			cactiSceneBehind1[i]->generate(0.0f, 0.4f, 0.0f);
-			cactiSceneBehind2[i]->generate(0.0f, 0.4f, 0.0f);
-			cactiSceneBehind3[i]->generate(0.0f, 0.4f, 0.0f);
-		}
-
-		if(i < cactiSceneOnPathSize){
-
-			cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
-			cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
-		 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
-		}
-		
-
-		if(i < cactiSceneForwardSize){
-
-			cactiSceneForward1[i]->generate(0.0f, 0.4f, 0.0f);
-			cactiSceneForward2[i]->generate(0.0f, 0.4f, 0.0f);
-			cactiSceneForward3[i]->generate(0.0f, 0.4f, 0.0f);
-		}
+		cactiSceneBehind1[i]->generate(0.0f, 0.4f, 0.0f);
+		cactiSceneBehind2[i]->generate(0.0f, 0.4f, 0.0f);
+		cactiSceneBehind3[i]->generate(0.0f, 0.4f, 0.0f);
 
 	}
+
+	//OBS.: É necessário um for separado pois as diversas iterações de um for conjunto fazem com
+	//      que alguns cactos de trás da cena fiquem à frente dos on Path
+	for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
+
+		cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
+		cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
+	 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
+	}
+
+	// Para que não seja visualizada a primeira renderização deles, os pteros são gerados 300 blocos além
+	// da posição definida nesse if, ou seja, o jogador só os vê aproximadamente à partir da posição 450
+	if(170 <= dino->getCoordinateX()){
+		for(unsigned short int i = 0; i < pterosSize; i++){
+
+	    	pteros1[i]->generate(0.0f, 0.0f, 1.0f);
+	    	pteros1[i]->flyAction();
+	    	pteros2[i]->generate(0.0f, 0.0f, 1.0f);
+	    	pteros2[i]->flyAction();
+	    	pteros3[i]->generate(0.0f, 0.0f, 1.0f);
+	    	pteros3[i]->flyAction();
+	    }
+	}
 	
-	// Aqui é gerado o dinossauro:
+	// Aqui é gerado o dinossauro e definido suas ações:
 	dino->generate(0.4f, 0.4f, 0.4f);
+    dino->runAction();
+    dino->jumpAction(&jump, &descend);
 
 	// Aqui ocorre a geração dos objetos à frente do dinossauro em relação à câmera (no modo câmera padrão)
 	for(unsigned short int i = 0; i < cactiSceneForwardSize; i++){
@@ -379,10 +405,7 @@ void display(void){
 		cactiSceneForward3[i]->generate(0.0f, 0.4f, 0.0f);
 	}
 
-	// Aqui é feito a checagem das ações de movimento dos objetos:
-    dino->runAction();
-    dino->jumpAction(&jump, &descend);
-
+    // Troca os buffers
     glutSwapBuffers();
 }
 
@@ -394,12 +417,20 @@ int main (int argumentsC, char **argumentsV){
 	// Define as posições iniciais de cada objeto no mundo:
 	objectsInitialPositions();
 
+	// Passa a display tanto para glutDisplayFunc quanto para
+	// a glutIdleFunc, pois, pelas minhas pesquisas em tutoriais,
+	// forçar essa chamada tanto em Display quanto em Idle gera uma
+	// pequena melhora de performance no desempenho da aplicação com glut
     glutDisplayFunc (display);
     glutIdleFunc (display);
     //glutReshapeFunc (reshape);
 
+    // Chama a função do header controls.h que define as teclas que
+    // serão usadas e o que farão ao serem pressionadas
     controlsDefinitions();
 
+    // Inicia o loop de renderização
     glutMainLoop ();
+
     return 0;
 }

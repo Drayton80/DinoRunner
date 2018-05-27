@@ -125,6 +125,69 @@ int randomCactiOnPath(int *positionArray, float CharacterPositionZ, Object **cac
     return 1;
 }
 
+int randomPterodactylusOnPath(int positionArray, float CharacterPositionZ, Pterodactylus **pterosOnPath, 
+                              int pterosOnPathSize, int begin, int *randomFillBar,
+                              int randomFillBarLimit){
+
+    // Se positionArray ultrapassar o limite do array é retornado um valor que denota esse problema.
+    if(pterosOnPathSize < positionArray){
+        return 0;
+    }
+
+    // Assim como apenas preenche o array do pterosOnPath enquanto i for menor que  o
+    // tamanho do próprio array (senão haveria corrupção de memória). Aqui é usado o positionArray
+    // em vez do i pois há uma alteração diferente nele dependendo se há uma sequência de
+    // cactos ou não
+    if(positionArray < pterosOnPathSize){
+        // Inicia preenchendo de 0
+        *randomFillBar += rand() % 2 + 1;
+
+        // Se *randomFillBar ultrapassar seu limite, um cacto é gerado no caminho na
+        // posição relativa ao i atual, senão ele é gerado em qualquer outro canto da cena.
+        if(randomFillBarLimit <= *randomFillBar){
+            // Define a coordenada X como o valor de positionArray (referenta a posição dentro do limite
+            // de begin até begin+positionArray)
+            // OBS.: O rand()%151 serve para espalhar os 50 pteros ao longo de 150 blocos
+            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 300 + rand()%151);
+            // Há 33% de chance do pterodáctilo vir voando mais alto do que o normal
+            // O 1 + (rand()%11 + 1)/10.0f garante que essa variação será de 1.0 até 2.0, pois o
+            // rand()%11 + 1 faz com que o intervalo seja de 1 até 10 e a divisão por 10.0f
+            // normaliza num float que vai de 0.0 até 1.0
+            rand()%3 == 1 ? 
+            pterosOnPath[positionArray]->setCoordinateY(1.0 + (rand()%11 + 1)/10.0f):
+            pterosOnPath[positionArray]->setCoordinateY(1.0);
+            // Caso entre nesse if o cacto será gerado no posição Z por onde o personagem passa (constante),
+            // ou seja, na linha de movimento do personagem
+            pterosOnPath[positionArray]->setCoordinateZ(CharacterPositionZ);
+
+            // A contagem do fillBar volta para 0 novamente para outra rodada de aleatoriedade
+            // assim é garantido que os cactos não fiquem se aglomerem em sequência (o que faria 
+            // com que não fosse possível atravessá-los com um pulo)
+            *randomFillBar = 0;
+
+        }else{
+            // Caso não caia na condição de gerar os cactos no meio do caminho, eles são
+            // gerados na exata posição em X, mas com um Z aleatório no resto da cena
+            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 300 + rand()%151);
+            // Aqui a variação da altura fica entre 1 e 5 para dar mais variação na altitude
+            // já que ele não está voando no caminho do dino, não há necessidade de colocar
+            // uma altura que ele alcance
+            pterosOnPath[positionArray]->setCoordinateY(1.0 + (rand()%41 + 1)/10.0f);
+            // Faz um rand de 0 ou 1 para ter 50% de chance dos pterodáctilos cairem na frente
+            // ou atrás da cena 
+            rand()%2 == 1 ? pterosOnPath[positionArray]->setCoordinateZ(-(rand()%96 + 5)):
+                            pterosOnPath[positionArray]->setCoordinateZ( (rand()%96 + 5));
+        }
+
+        // OBS.: é usado um positionArray auxiliar dentro de um for de i também pois mesmo que não seja 
+        //       feita qualquer sequência de cactos ainda sim será preservado o numero de positionArray
+        //       necessário para preencher todo array, ou seja, sempre será
+        //       positionArray <= tamanhoDoArrayOnPath
+    }
+
+    return 1;
+}
+
 ///==============///==================================================================================================///
 
 #endif	// RANDOM_H

@@ -38,14 +38,12 @@ public:
     void setVariationY(float newVariationY);
 
 private:
-    // Atributos que guardam informações sobre a variação
-    // do objeto em determinado instante no respectivo eixo
+    // Atributos que guardam informações sobre a variação do
+    // deslocamento do objeto em determinado instante no respectivo eixo
     float variationX;       // Variação Atual do movimento
     float maxVariationX;    // Variação Máxima
     float variationY;       // Variação atual do pulo
 
-    // Apenas para exibição de testes:
-    float lastCoordinateX = 0.0;
 };
 
 
@@ -137,24 +135,14 @@ void Dinosaur::runAction(){
         // aumentar a velocidade de movimento:
         variationX += 0.0000055;
 
-       //--------- Apenas para exibição ----------//
-        velocity = coordinateX - lastCoordinateX;
-        lastCoordinateX = coordinateX;
-
-        cout << "velocity = " << velocity << "\n";
-       //--------- -------------------- ----------//
+        cout << "Coordenada X = " << coordinateX << "\n";
 
     }else if(maxVariationX <= variationX){
         // Estagna a variação da posição até aproximadamente
         // o valor de maxVariationX (variação máxima)
         coordinateX  = coordinateX + variationX;
 
-       //--------- Apenas para exibição ----------//
-        velocity = coordinateX - lastCoordinateX;
-        lastCoordinateX = coordinateX;
-
-        cout << "velocity = " << velocity << "\n";
-       //--------- -------------------- ----------//
+        cout << "Coordenada X = " << coordinateX << "\n";
     }
 }
 
