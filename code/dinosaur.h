@@ -8,11 +8,12 @@ using namespace std;
 #ifndef DINOSAUR_H
 #define DINOSAUR_H
 
-/* CLASSE DINOSSAUR
- *  Descrição: 
+/// CLASSE DINOSSAUR ///========================================================================================///
+/*  Descrição: 
  *    classe referente ao objeto dinossauro, personagem principal
  *    da corrida contra o meteoro.
  */
+///==================///========================================================================================///
 class Dinosaur:public Object{
 public:
     // Prototipação do Construtor:
@@ -48,7 +49,7 @@ private:
 };
 
 
-// CONSTRUTOR //----------------------//
+// CONSTRUTOR //---------------------------------------------------------------------------//
 
 Dinosaur::Dinosaur(){
     // Atributos herdados:
@@ -113,10 +114,10 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
     variationY = 0.17;   
 }
 
-//------------//----------------------//
+//------------//---------------------------------------------------------------------------//
 
 
-// MÈTODOS DE PROPÒSITO GERAL //---------------------------------------------------//
+// MÈTODOS DE PROPÒSITO GERAL //-----------------------------------------------------------//
 
 /* Método Run Action:  
  *   Descrição: 
@@ -200,10 +201,10 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
     }
 }
 
-//----------------------------//---------------------------------------------------//
+//----------------------------//-----------------------------------------------------------//
 
 
-// MÈTODOS GET E SET //----------------------------//
+// MÈTODOS GET E SET //--------------------------------------------------------------------//
 
 // Métodos Get:
 float Dinosaur::getVariationX(){
@@ -231,6 +232,8 @@ void Dinosaur::setVariationY(float newVariationY){
     variationY = newVariationY;
 }
 
-//-------------------//----------------------------//
+//-------------------//--------------------------------------------------------------------//
+
+///=================///========================================================================================///
 
 #endif	// DINOSAUR_H
