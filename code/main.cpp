@@ -23,9 +23,9 @@ Object *cactiSceneOnPath1[150];
 Object *cactiSceneOnPath2[150];
 Object *cactiSceneOnPath3[150];
 
-Object *cactiSceneForward1[5];
-Object *cactiSceneForward2[5];
-Object *cactiSceneForward3[5];
+Object *cactiSceneForward1[100];
+Object *cactiSceneForward2[100];
+Object *cactiSceneForward3[100];
 
 Pterodactylus *pteros1[50];
 Pterodactylus *pteros2[50];
@@ -120,9 +120,9 @@ void objectsInitialPositions(){
 
 		if(i < cactiSceneForwardSize){
 
-			cactiSceneForward1[i] = new Object(randomX-cactiLimit, 0.0, -(rand()%1));
-			cactiSceneForward2[i] = new Object(randomX           , 0.0, -(rand()%1));
-			cactiSceneForward3[i] = new Object(randomX+cactiLimit, 0.0, -(rand()%1));
+			cactiSceneForward1[i] = new Object(randomX-cactiLimit, 0.0, rand()%76);
+			cactiSceneForward2[i] = new Object(randomX           , 0.0, rand()%76);
+			cactiSceneForward3[i] = new Object(randomX+cactiLimit, 0.0, rand()%76);
 		}
 	}
 }
@@ -169,7 +169,7 @@ void objectsNextPositions(){
 				if(i < cactiSceneForwardSize){
 					// Define novas coordenadas para os cactos da frente:
 					cactiSceneForward1[i]->setCoordinateX(randomX);
-					cactiSceneForward1[i]->setCoordinateZ(-(rand()%1));
+					cactiSceneForward1[i]->setCoordinateZ(rand()%76);
 				}
 			}
 
@@ -203,7 +203,7 @@ void objectsNextPositions(){
 				if(i < cactiSceneForwardSize){
 					// Define novas coordenadas para os cactos da frente:
 					cactiSceneForward2[i]->setCoordinateX(randomX);
-					cactiSceneForward2[i]->setCoordinateZ(-(rand()%1));
+					cactiSceneForward2[i]->setCoordinateZ(rand()%76);
 				}
 			}
 
@@ -237,7 +237,7 @@ void objectsNextPositions(){
 				if(i < cactiSceneForwardSize){
 					// Define novas coordenadas para os cactos da frente:
 					cactiSceneForward3[i]->setCoordinateX(randomX);
-					cactiSceneForward3[i]->setCoordinateZ(-(rand()%1));
+					cactiSceneForward3[i]->setCoordinateZ(rand()%76);
 				}
 			}
 
@@ -254,20 +254,27 @@ void camera (void) {
 
 	// Se o modo fps estiver ativo a câmera fica livre para se movimentar:
 	if(fpsActive){
-		glRotatef(xRotation,1.0,0.0,0.0);  //rotate our camera on teh 
-    	glRotatef(yRotation,0.0,1.0,0.0);  //rotate our camera on the 
+		glTranslatef( -dino->getCoordinateZ(), -dino->getCoordinateY() - 0.5, dino->getCoordinateX() - 0.5);
+		// É preciso primeiramente rotacionar a camera 90º em torno do eixo Y para que ela comece
+		// a apontar para onde o dinossauro aponta
+		// OBS.: No OpenGL a chamada das matrizes mais abaixo ocorre primeiro, sendo isso devido ao fato
+		//       de que, na multiplicação de matrizes para ocorrer transformações geomêtricas, a transformação
+		//       que é colocada mais à direita ocorre primeiro, ou seja, em M = Mt * Ms * Ma, Ma ocorrerá
+		//       primeiro, depois será Ms e, por fim, Mt. Ao colocarmos isso em termos de OpenGL aqui nessas
+		//       duas transformações obteriamos M = glTranslatef(...) * glRotatef(...)
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+	}else{
+		// Faz com que a câmera se mova na direção do dinossauro, ou seja, para a direita (sentido positivo de x),
+		// pois, a partir do momento em que a câmera é fixa na origem, para que ela se mova para um
+		// lado é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
+		// sinal negativo em getCoordinate e em todas as outras coordenadas que queremos deslocá-la
+	    // É colocado getCoordinate Y aqui no deslocamento em y para dar uma sensação de movimento conjunto no
+	    // momento do pulo (mas diminuido pelo vezes 0.3) assim conferindo um aspecto de suavidade durante o pulo.
+	    // Como a câmera é fixa no dinossauro também em relação ao X, para fazer com que ele fique um pouco deslocado
+	    // para a esquerda (posicionado no canto esquerdo da tela) em relação à câmera basta somar uma constante
+	    // com o getCoordinateX
+	    glTranslatef( -(dino->getCoordinateX()+1.7), -(dino->getCoordinateY())*0.3 - 0.7, -2.5);
 	}
-
-	// Faz com que a câmera se mova na direção do dinossauro, ou seja, para a direita (sentido positivo de x),
-	// pois, a partir do momento em que a câmera é fixa na origem, para que ela se mova para um
-	// lado é necessário que todo o resto seja movido na direção oposta a esse lado. Por isso o
-	// sinal negativo em getCoordinate e em todas as outras coordenadas que queremos deslocá-la
-    // É colocado getCoordinate Y aqui no deslocamento em y para dar uma sensação de movimento conjunto no
-    // momento do pulo (mas diminuido pelo vezes 0.3) assim conferindo um aspecto de suavidade durante o pulo.
-    // Como a câmera é fixa no dinossauro também em relação ao X, para fazer com que ele fique um pouco deslocado
-    // para a esquerda (posicionado no canto esquerdo da tela) em relação à câmera basta somar uma constante
-    // com o getCoordinateX
-    glTranslatef( -(dino->getCoordinateX()+1.7), -(dino->getCoordinateY())*0.3 - 0.7, -2.5);
 }
 
 void testLines(){
