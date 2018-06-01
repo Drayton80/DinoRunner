@@ -13,7 +13,7 @@
 
 using namespace std;
 
-Dinosaur *dino = new Dinosaur();	// Instanciação do dinossauro corredor
+Dinosaur *dino;	// Instanciação do dinossauro corredor
 
 Object *cactiSceneBehind1[100];
 Object *cactiSceneBehind2[100];
@@ -38,23 +38,34 @@ int cactiSceneBiggerSize;
 
 int pterosSize = sizeof(pteros1) /sizeof(pteros1[0]);
 
-unsigned short int cactiLimit = 150;
-unsigned int cactiGenerateBegin = 150;
-short int cactiGenerateSwitch = 0;
+unsigned short int cactiLimit;
+unsigned int cactiGenerateBegin;
+short int cactiGenerateSwitch;
 
-int fillBar = 0;
-int fillBarLimit = 20;
+int fillBar;
+int fillBarLimit;
 
-int fillBarPteros = 0;
-int fillBarLimitPteros = 30;
+int fillBarPteros;
+int fillBarLimitPteros;
 
-
-
+/* Função Objects Initial Positions:  
+ *   Descrição: 
+ *     Define as posições e valores iniciais de variáveis no começo do jogo, logo essa função será
+ *     chamada quando o jogo começar e toda vez que o personagem renascer.
+ */
 void objectsInitialPositions(){
-	// Define um X aleatório para posicionar algo:
-	float randomX;
+	dino = new Dinosaur(0.0f, 0.0f, -1.0f);
 
-	dino->setCoordinateZ(-1.0);
+	cactiLimit = 150;
+	cactiGenerateBegin = 150;
+	cactiGenerateSwitch = 0;
+
+	fillBar = 0;
+	fillBarLimit = 20;
+	fillBarPteros = 0;
+	fillBarLimitPteros = 30;
+
+	float randomX;
 
 	// Aqui é verificado qual o maior de todos os sizes, comparando primeiramente behind com onPath
 	// e depois forward com o resultado anterior
@@ -153,7 +164,7 @@ void objectsNextPositions(){
 				// 300 blocos até no mínimo de 10, isso garante que o número de cactos
 				// no caminho aumento cada vez mais até um limite (necessário para que não
 				// haja só cactos no caminho em determinado ponto)
-				if(10 < fillBarLimit) fillBarLimit--;
+				if(15 < fillBarLimit) fillBarLimit--;
 
 				// A alternação entre 3 cactiSceneOnPath é feita aqui novamente para 
 				// gerar aleatoriamente sem que o jogador perceba e para que não sejam
@@ -249,9 +260,6 @@ void objectsNextPositions(){
 }
 
 void camera (void) {
-	// Define as opções da perspectiva, como a Field of View, o near plane, etc
-	gluPerspective(60.0, (GLfloat)IMAGE_WIDTH/(GLfloat)IMAGE_HEIGHT, 1.0, 100.0);
-
 	// Se o modo fps estiver ativo a câmera fica livre para se movimentar:
 	if(fpsActive){
 		glTranslatef( -dino->getCoordinateZ(), -dino->getCoordinateY() - 0.5, dino->getCoordinateX() - 0.5);
@@ -275,6 +283,16 @@ void camera (void) {
 	    // com o getCoordinateX
 	    glTranslatef( -(dino->getCoordinateX()+1.7), -(dino->getCoordinateY())*0.3 - 0.7, -2.5);
 	}
+}
+
+void reshape (int width, int height) {  
+	glViewport(0, 0, (GLsizei)width, (GLsizei)height);   
+	glMatrixMode(GL_PROJECTION);   
+	glLoadIdentity();   
+
+	// Define as opções da perspectiva, como a Field of View, o near plane, etc
+	gluPerspective(60, (GLfloat)width / (GLfloat)height, 1.0, 100.0); 
+	glMatrixMode(GL_MODELVIEW);   
 }
 
 void testLines(){
@@ -428,9 +446,9 @@ int main (int argumentsC, char **argumentsV){
 	// a glutIdleFunc, pois, pelas minhas pesquisas em tutoriais,
 	// forçar essa chamada tanto em Display quanto em Idle gera uma
 	// pequena melhora de performance no desempenho da aplicação com glut
-    glutDisplayFunc (display);
-    glutIdleFunc (display);
-    //glutReshapeFunc (reshape);
+    glutDisplayFunc(display);
+    glutIdleFunc(display);
+    glutReshapeFunc(reshape);
 
     // Chama a função do header controls.h que define as teclas que
     // serão usadas e o que farão ao serem pressionadas

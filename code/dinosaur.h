@@ -107,7 +107,7 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
 
     // Atributos da Classe:
     variationX = 0;
-    maxVariationX = 0.5;
+    maxVariationX = 0.3;
 
     variationY = 0.17;   
 }
@@ -133,16 +133,16 @@ void Dinosaur::runAction(){
         coordinateX  = coordinateX + variationX;
         // A variationX cresce linearmente aos poucos para
         // aumentar a velocidade de movimento:
-        variationX += 0.0000055;
+        variationX += 0.00000055;
 
-        cout << "Coordenada X = " << coordinateX << "\n";
+        //|cout << "Coordenada X = " << coordinateX << "\n";
 
     }else if(maxVariationX <= variationX){
         // Estagna a variação da posição até aproximadamente
         // o valor de maxVariationX (variação máxima)
         coordinateX  = coordinateX + variationX;
 
-        cout << "Coordenada X = " << coordinateX << "\n";
+        //|cout << "Coordenada X = " << coordinateX << "\n";
     }
 }
 
