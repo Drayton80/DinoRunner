@@ -20,12 +20,13 @@ public:
     Dinosaur();
     Dinosaur(float currentX, float currentY, float currentZ);
     Dinosaur(float currentX, float currentY, float currentZ,
-             bool  rotateX , bool  rotateY , bool   rotateZ,
-             float angle   , float newSize);
+             bool  rotateX , bool  rotateY , bool  rotateZ ,
+             float angle   , float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void runAction();
     void jumpAction(bool *jumping, float *descendForced);
+    void collisionEffect();
 
     // Métodos Get:
     float getVariationX();
@@ -40,9 +41,11 @@ public:
 private:
     // Atributos que guardam informações sobre a variação do
     // deslocamento do objeto em determinado instante no respectivo eixo
-    float variationX;       // Variação Atual do movimento
-    float maxVariationX;    // Variação Máxima
-    float variationY;       // Variação atual do pulo
+    float variationX;          // Variação Atual do movimento
+    float incrementVariationX; // Define o incremento da variação
+    float maxVariationX;       // Variação Máxima
+    float variationY;          // Variação atual do pulo
+    float decrementVariationY; // Define o decremento da variação
 
 };
 
@@ -60,13 +63,26 @@ Dinosaur::Dinosaur(){
     rotationZ = false;
     rotationAngle = 0.0;
 
-    size = 1.0;
+    sizeX = 0.5;
+    sizeY = 0.5;
+    sizeZ = 0.5;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false; 
 
     // Atributos da Classe:
     variationX = 0;
+    incrementVariationX = 0.00000055;
     maxVariationX = 0.5;
 
-    variationY = 0.17;   
+    variationY = 0.17;
+    decrementVariationY = 0.007;
 }
 
 Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
@@ -80,20 +96,32 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
     rotationZ = false;
     rotationAngle = 0.0;
 
-    size = 1.0;
+    sizeX = 0.5;
+    sizeY = 0.5;
+    sizeZ = 0.5;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false; 
 
     // Atributos da Classe:
     variationX = 0;
+    incrementVariationX = 0.00000055;
     maxVariationX = 0.5;
 
-    variationY = 0.17;   
+    variationY = 0.17;
+    decrementVariationY = 0.007;  
 }
 
 Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
                    bool  rotateX , bool  rotateY , bool  rotateZ ,
-                   float angle   , float newSize){
-
-    // Atributos herdados:
+                   float angle   , float newSizeX, float newSizeY, float newSizeZ){
+    // Atributos Herdados:
     coordinateX = currentX;
     coordinateY = currentY;
     coordinateZ = currentZ;
@@ -103,13 +131,26 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    size = newSize;
+    sizeX = newSizeX;
+    sizeY = newSizeY;
+    sizeZ = newSizeZ;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false;  
 
     // Atributos da Classe:
     variationX = 0;
-    maxVariationX = 0.3;
+    incrementVariationX = 0.00000055;
+    maxVariationX = 0.5;
 
-    variationY = 0.17;   
+    variationY = 0.17;
+    decrementVariationY = 0.007;  
 }
 
 //------------//---------------------------------------------------------------------------//
@@ -123,26 +164,26 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
  *     aceleração (constante) e velocidade (aumenta conforme o tempo até estabilizar).
  */
 void Dinosaur::runAction(){
-    float velocity;
+    if(!collided){
+        // O dinossauro só corre se estiver em movimento, pois ele inicia o jogo
+        // parado
+        if(0 < variationX && variationX <= maxVariationX){
+            // Faz com que a posição seja incrementada de acordo
+            // com o valor da variationX:
+            coordinateX  = coordinateX + variationX;
+            // A variationX cresce linearmente aos poucos para
+            // aumentar a velocidade de movimento:
+            variationX += incrementVariationX;
 
-    // O dinossauro só corre se estiver em movimento, pois ele inicia o jogo
-    // parado
-    if(0 < variationX && variationX <= maxVariationX){
-        // Faz com que a posição seja incrementada de acordo
-        // com o valor da variationX:
-        coordinateX  = coordinateX + variationX;
-        // A variationX cresce linearmente aos poucos para
-        // aumentar a velocidade de movimento:
-        variationX += 0.00000055;
+            //|cout << "Coordenada X = " << coordinateX << "\n";
 
-        //|cout << "Coordenada X = " << coordinateX << "\n";
+        }else if(maxVariationX <= variationX){
+            // Estagna a variação da posição até aproximadamente
+            // o valor de maxVariationX (variação máxima)
+            coordinateX  = coordinateX + variationX;
 
-    }else if(maxVariationX <= variationX){
-        // Estagna a variação da posição até aproximadamente
-        // o valor de maxVariationX (variação máxima)
-        coordinateX  = coordinateX + variationX;
-
-        //|cout << "Coordenada X = " << coordinateX << "\n";
+            //|cout << "Coordenada X = " << coordinateX << "\n";
+        }
     }
 }
 
@@ -164,11 +205,11 @@ void Dinosaur::runAction(){
  */
 void Dinosaur::jumpAction(bool *jumping, float *descendForced){
     // Apenas entra aqui durante uma ação de pulo
-    if(*jumping){
+    if(*jumping && !collided){
         // A coordenada Y é incrementada de acordo com a variationY, que, por sua
         // vez, é decrementada linearmente a cada interação
         coordinateY += variationY + *descendForced;
-        variationY -= 0.007;
+        variationY -= decrementVariationY;
 
         // Quando o objeto chega ao chão novamente é quando ele para
         // de cair e também deixa de pular. Ao apertar o botão de pulo
@@ -186,6 +227,16 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
                 variationX = 0.08;
             }
         }
+    }
+}
+
+void Dinosaur::collisionEffect(){
+    if(collided){
+        // Se o personagem colidir ele pare de se mover
+        variationX = 0;
+        variationY = 0;
+
+        // TO DO - Mudança de textura?
     }
 }
 

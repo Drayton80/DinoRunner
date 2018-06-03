@@ -399,8 +399,51 @@ void display(void){
 	for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
 
 		cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
+
+		// Se o Plano Positivo X (parte da frente) do dinossauro estiver dentro dos limites dos planos de delimitação
+		// do objeto ou o Plano Negativo X (parte de trás) dele estiver e, ao mesmo tempo, o Plano Negativo Y (parte
+		// de baixo) do dinossauro estiver abaixo do Plano Positivo Y do objeto (parte de cima), então isso significará
+		// que o cubo de delimitação do dinossauro adentrou os limites do cubo do objeto e, por conseguinte, haverá
+		// colisão
+ 		if( ((cactiSceneOnPath1[i]->getPlanNegativeX() <= dino->getPlanPositiveX()  && 
+              dino->getPlanPositiveX() <= cactiSceneOnPath1[i]->getPlanPositiveX()) ||
+             (cactiSceneOnPath1[i]->getPlanNegativeX() <= dino->getPlanNegativeX()  &&
+              dino->getPlanNegativeX() <= cactiSceneOnPath1[i]->getPlanPositiveX()))&&  
+		     (dino->getPlanNegativeY() <= cactiSceneOnPath1[i]->getPlanPositiveY()) ){
+ 			dino->setCollided(true);
+		}
+	
 		cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
+
+		// Se o Plano Positivo X (parte da frente) do dinossauro estiver dentro dos limites dos planos de delimitação
+		// do objeto ou o Plano Negativo X (parte de trás) dele estiver e, ao mesmo tempo, o Plano Negativo Y (parte
+		// de baixo) do dinossauro estiver abaixo do Plano Positivo Y do objeto (parte de cima), então isso significará
+		// que o cubo de delimitação do dinossauro adentrou os limites do cubo do objeto e, por conseguinte, haverá
+		// colisão
+ 		if( ((cactiSceneOnPath1[i]->getPlanNegativeX() <= dino->getPlanPositiveX()  && 
+              dino->getPlanPositiveX() <= cactiSceneOnPath1[i]->getPlanPositiveX()) ||
+             (cactiSceneOnPath1[i]->getPlanNegativeX() <= dino->getPlanNegativeX()  &&
+              dino->getPlanNegativeX() <= cactiSceneOnPath1[i]->getPlanPositiveX()))&&  
+		     (dino->getPlanNegativeY() <= cactiSceneOnPath1[i]->getPlanPositiveY()) ){
+ 			dino->setCollided(true);
+		}
+
 	 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
+
+	 	// Se o Plano Positivo X (parte da frente) do dinossauro estiver dentro dos limites dos planos de delimitação
+		// do objeto ou o Plano Negativo X (parte de trás) dele estiver e, ao mesmo tempo, o Plano Negativo Y (parte
+		// de baixo) do dinossauro estiver abaixo do Plano Positivo Y do objeto (parte de cima), então isso significará
+		// que o cubo de delimitação do dinossauro adentrou os limites do cubo do objeto e, por conseguinte, haverá
+		// colisão
+ 		if( ((cactiSceneOnPath1[i]->getPlanNegativeX() <= dino->getPlanPositiveX()  && 
+              dino->getPlanPositiveX() <= cactiSceneOnPath1[i]->getPlanPositiveX()) ||
+             (cactiSceneOnPath1[i]->getPlanNegativeX() <= dino->getPlanNegativeX()  &&
+              dino->getPlanNegativeX() <= cactiSceneOnPath1[i]->getPlanPositiveX()))&&  
+		     (dino->getPlanNegativeY() <= cactiSceneOnPath1[i]->getPlanPositiveY()) ){
+ 			dino->setCollided(true);
+		}
+
+		dino->collisionEffect();
 	}
 
 	// Para que não seja visualizada a primeira renderização deles, os pteros são gerados 300 blocos além

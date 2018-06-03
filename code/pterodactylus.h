@@ -20,8 +20,8 @@ public:
     Pterodactylus();
     Pterodactylus(float currentX, float currentY, float currentZ);
     Pterodactylus(float currentX, float currentY, float currentZ,
-                  bool  rotateX , bool  rotateY , bool   rotateZ,
-                  float angle   , float newSize);
+                  bool  rotateX , bool  rotateY , bool  rotateZ ,
+                  float angle   , float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void flyAction();
@@ -52,8 +52,20 @@ Pterodactylus::Pterodactylus(){
     rotationZ = false;
     rotationAngle = 0.0;
 
-    size = 1.0; 
+    sizeX = 0.5;
+    sizeY = 0.5;
+    sizeZ = 0.5;
 
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false; 
+
+    // Atributos da classe:
     constantVariationX = -0.06;
 }
 
@@ -68,14 +80,26 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ){
     rotationZ = false;
     rotationAngle = 0.0;
 
-    size = 1.0;  
+    sizeX = 0.5;
+    sizeY = 0.5;
+    sizeZ = 0.5;
 
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false; 
+
+    // Atributos da Classe:
     constantVariationX = -0.06;
 }
 
 Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
                              bool  rotateX , bool  rotateY , bool  rotateZ ,
-                             float angle   , float newSize){
+                             float angle   , float newSizeX, float newSizeY, float newSizeZ){
 
     // Atributos herdados:
     coordinateX = currentX;
@@ -87,8 +111,20 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    size = newSize;
+    sizeX = newSizeX;
+    sizeY = newSizeY;
+    sizeZ = newSizeZ;
 
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false;  
+
+    // Atributos da Classe:
     constantVariationX = -0.06;  
 }
 
@@ -97,7 +133,7 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
 
 // MÈTODOS DE PROPÒSITO GERAL //-----------------------------------------------------------//
 
-/* Método Flt Action:  
+/* Método Fly Action:  
  *   Descrição: 
  *     Define o movimento constante do pterodáctilo ao longo do plano XoZ.
  */

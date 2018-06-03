@@ -18,9 +18,9 @@ public:
     // Prototipação dos Construtores:
     Object();
     Object(float currentX, float currentY, float currentZ);
-    Object(float currentX, float currentY, float currentZ ,
-           bool  rotateX , bool  rotateY , bool  rotateZ  ,
-           float angle   , float newSize);
+    Object(float currentX, float currentY, float currentZ,
+           bool  rotateX , bool  rotateY , bool  rotateZ ,
+           float angle   , float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void generate(float red, float green, float blue);
@@ -33,7 +33,16 @@ public:
     bool  getRotationY();
     bool  getRotationZ();
     float getRotationAngle();
-    float getSize();
+    float getSizeX();
+    float getSizeY();
+    float getSizeZ();
+    float getPlanPositiveX();
+    float getPlanNegativeX();
+    float getPlanPositiveY();
+    float getPlanNegativeY();
+    float getPlanPositiveZ();
+    float getPlanNegativeZ();
+    bool  getCollided();
     // Prototipação dos Métodos Set:
     void setCoordinateX(float currentX);
     void setCoordinateY(float currentY);
@@ -42,7 +51,10 @@ public:
     void setRotationY(bool rotateY);
     void setRotationZ(bool rotateZ);
     void setRotationAngle(float rotateAngle);
-    void setSize(float newSize);
+    void setSizeX(float newSizeX);
+    void setSizeY(float newSizeY);
+    void setSizeZ(float newSizeZ);
+    void setCollided(bool newCollided);
 
 protected:
     // Coordenadas da posição do objeto:
@@ -56,8 +68,21 @@ protected:
     bool  rotationZ;
     float rotationAngle;
 
-    // Definição da distorção de tamanho do objeto:
-    float size;
+    // Definição do tamanho do objeto:
+    float sizeX;
+    float sizeY;
+    float sizeZ;
+
+    // Definem os limites da Hit Box do objeto
+    float planPositiveX;
+    float planNegativeX;
+    float planPositiveY;
+    float planNegativeY;
+    float planPositiveZ;
+    float planNegativeZ;
+
+    // Definidor de colisão do objeto:
+    bool collided;
 };
 
 
@@ -73,7 +98,18 @@ Object::Object(){
     rotationZ = false;
     rotationAngle = 0.0;
 
-    size = 1.0;
+    sizeX = 0.5;
+    sizeY = 0.5;
+    sizeZ = 0.5;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false;
 }
 
 Object::Object(float currentX, float currentY, float currentZ){
@@ -86,12 +122,23 @@ Object::Object(float currentX, float currentY, float currentZ){
     rotationZ = false;
     rotationAngle = 0.0;
 
-    size = 1.0;
+    sizeX = 0.5;
+    sizeY = 0.5;
+    sizeZ = 0.5;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false; 
 }
 
 Object::Object(float currentX, float currentY, float currentZ,
                bool  rotateX , bool  rotateY , bool  rotateZ ,
-               float angle   , float newSize){
+               float angle   , float newSizeX, float newSizeY, float newSizeZ){
 
     coordinateX = currentX;
     coordinateY = currentY;
@@ -102,7 +149,18 @@ Object::Object(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    size = newSize;
+    sizeX = newSizeX;
+    sizeY = newSizeY;
+    sizeZ = newSizeZ;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+
+    collided = false;  
 }
 
 //--------------//---------------------------------------------------------------------------//
@@ -124,7 +182,7 @@ Object::Object(float currentX, float currentY, float currentZ,
 void Object::generate(float red, float green, float blue){
     glPushMatrix();
         // Muda o tamanho do objeto ao aplicar uma escala isotrópica em X, Y e Z
-        glScalef(size, size, size);
+        //glScalef(size, size, size);
         // Faz a rotação em torno do eixo Y, sendo essa a única rotação possível
         // já que o Cacto deve sempre permanecer em pé
         glRotatef(rotationAngle, rotationX == true ? 1.0f : 0.0f,
@@ -142,7 +200,7 @@ void Object::generate(float red, float green, float blue){
         // Define a cor do objeto:
         glColor3f (red, green, blue);
         // Exibe o objeto:
-        glutSolidCube(0.5); 
+        glutSolidCube(sizeX); 
     glPopMatrix();
 }
 
@@ -180,21 +238,66 @@ float Object::getRotationAngle(){
     return rotationAngle;
 }
 
-float Object::getSize(){
-    return size;
+float Object::getSizeX(){
+    return sizeX;
+}
+
+float Object::getSizeY(){
+    return sizeY;
+}
+
+float Object::getSizeZ(){
+    return sizeZ;
+}
+
+float Object::getPlanPositiveX(){
+    return planPositiveX;
+}
+
+float Object::getPlanNegativeX(){
+    return planNegativeX;
+}
+
+float Object::getPlanPositiveY(){
+    return planPositiveY;
+}
+
+float Object::getPlanNegativeY(){
+    return planNegativeY;
+}
+
+float Object::getPlanPositiveZ(){
+    return planPositiveZ;
+}
+
+float Object::getPlanNegativeZ(){
+    return planNegativeZ;
+}
+
+bool Object::getCollided(){
+    return collided;
 }
 
 // Métodos Set:
 void Object::setCoordinateX(float currentX){
     coordinateX = currentX;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
 }
 
 void Object::setCoordinateY(float currentY){
     coordinateY = currentY;
+
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
 }
 
 void Object::setCoordinateZ(float currentZ){
     coordinateZ = currentZ;
+
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
 }
 
 void Object::setRotationX(bool rotateX){
@@ -213,8 +316,29 @@ void Object::setRotationAngle(float rotateAngle){
     rotationAngle = rotateAngle;
 }
 
-void Object::setSize(float newSize){
-    size = newSize;
+void Object::setSizeX(float newSizeX){
+    sizeX = newSizeX;
+
+    planPositiveX =  sizeX/2 + coordinateX;
+    planNegativeX = -sizeX/2 + coordinateX;
+}
+
+void Object::setSizeY(float newSizeY){
+    sizeY = newSizeY;
+
+    planPositiveY =  sizeY/2 + coordinateY;
+    planNegativeY = -sizeY/2 + coordinateY;
+}
+
+void Object::setSizeZ(float newSizeZ){
+    sizeZ = newSizeZ;
+
+    planPositiveZ =  sizeZ/2 + coordinateZ;
+    planNegativeZ = -sizeZ/2 + coordinateZ;
+}
+
+void Object::setCollided(bool newCollided){
+    collided = newCollided;
 }
 
 //-------------------//---------------------------------------------------------------------//
