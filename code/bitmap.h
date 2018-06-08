@@ -36,7 +36,8 @@ void drawString(string s, float x, float y){
 }
 
 void gameover(){
-	drawString("GAME OVER")
+
+	drawString("GAME OVER", 0, 0);
 }	
 
 #endif
