@@ -10,6 +10,7 @@
 #include "pterodactylus.h"
 #include "object.h"
 #include "random.h"
+#include "bitmap.h"
 
 using namespace std;
 
@@ -47,12 +48,16 @@ int fillBarLimit;
 
 int fillBarPteros;
 int fillBarLimitPteros;
+float widthCurrent = IMAGE_WIDTH;
 
 /* Função Objects Initial Positions:  
  *   Descrição: 
  *     Define as posições e valores iniciais de variáveis no começo do jogo, logo essa função será
  *     chamada quando o jogo começar e toda vez que o personagem renascer.
  */
+
+
+
 void objectsInitialPositions(){
 	dino = new Dinosaur(0.0f, 0.0f, -1.0f);
 
@@ -472,7 +477,32 @@ void display(void){
 		cactiSceneForward2[i]->generate(0.0f, 0.4f, 0.0f);
 		cactiSceneForward3[i]->generate(0.0f, 0.4f, 0.0f);
 	}
+	
 
+
+	//Carregar o label "SCORE" e o score que cresce com a coodernada X
+	//Carregando a projeção ortogonal
+	unsigned int score = dino->getCoordinateX() * 1.5;
+
+	//Conversão para string
+	string s = to_string(score);
+
+	setOrtho();
+	
+	glPushMatrix();
+	
+	glLoadIdentity();
+	
+	//Bitmap da string "SCORE:" e o score
+
+	drawString("SCORE: ", widthCurrent - 100, 20);
+	drawString(s, widthCurrent - 30, 20);
+
+
+	glPopMatrix();
+	//Voltando para a perspectiva anterior
+	restoreView();
+    
     // Troca os buffers
     glutSwapBuffers();
 }
