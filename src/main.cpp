@@ -343,20 +343,39 @@ void ground(){
 		glDisable(GL_TEXTURE_2D);
 
 	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, background_tex);
+
+		glBegin(GL_QUADS);
+				glTexCoord2d(0.0,0.0); 
+				glVertex3f(dino->getCoordinateX() + 90.0f, -50.0f, -150.0f);
+
+				glTexCoord2d(1.0,0.0); 
+				glVertex3f(dino->getCoordinateX() + 90.0f, -50.0f, 150.0f);
+
+				glTexCoord2d(1.0,1.0); 
+				glVertex3f(dino->getCoordinateX() + 90.0f, 150.0f, 150.0f);
+
+				glTexCoord2d(0.0,1.0);
+				glVertex3f(dino->getCoordinateX() + 90.0f, 150.0f, -150.0f);			
+				
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, ground_tex);
 
 		glBegin(GL_QUADS);
 				glTexCoord2d(0.0,0.0); 
-				glVertex3f(positionFactor - 100.0f, -0.2f, 10.0f);
+				glVertex3f(positionFactor - 100.0f, -0.2f, 50.0f);
 
 				glTexCoord2d(1.0,0.0); 
-				glVertex3f(positionFactor + 100.0f, -0.2f,  10.0f);
+				glVertex3f(positionFactor + 100.0f, -0.2f,  50.0f);
 
 				glTexCoord2d(1.0,1.0); 
-				glVertex3f(positionFactor + 100.0f, -0.2f, -90.0f);
+				glVertex3f(positionFactor + 100.0f, -0.2f, -50.0f);
 
 				glTexCoord2d(0.0,1.0);
-				glVertex3f(positionFactor - 100.0f, -0.2f, -90.0f);			
+				glVertex3f(positionFactor - 100.0f, -0.2f, -50.0f);			
 				
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
@@ -397,7 +416,7 @@ void display(void){
 
 		cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
 		collision = dino->collisionCheck(cactiSceneOnPath1[i]->getCenterDistance(), cactiSceneOnPath1[i]->getCoordinateX(), 
-                                         cactiSceneOnPath1[i]->getCoordinateY()   , cactiSceneOnPath1[i]->getCoordinateZ());
+                                        cactiSceneOnPath1[i]->getCoordinateY()   , cactiSceneOnPath1[i]->getCoordinateZ());
 	
 		cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
 		collision = dino->collisionCheck(cactiSceneOnPath2[i]->getCenterDistance(), cactiSceneOnPath2[i]->getCoordinateX(), 
