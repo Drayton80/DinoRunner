@@ -11,6 +11,7 @@
 #include "object.h"
 #include "random.h"
 #include "bitmap.h"
+#include "SOIL.h"
 
 using namespace std;
 
