@@ -304,25 +304,48 @@ void reshape (int width, int height) {
 void ground(){
 	// Push e Pop matrix servem para isolar uma transformação das demais, ou seja,
 	// fazer uma transformação focar em apenas uma
+	if((int)dino->getCoordinateX() % 50 == 0 && (int)dino->getCoordinateX() != 0){
+		positionFactor = (int)dino->getCoordinateX() + 50;
+	}
+	glPushMatrix();
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, background_tex);
+
+		glBegin(GL_QUADS);
+				glTexCoord2d(0.0,0.0); 
+				glVertex3f(dino->getCoordinateX() - 150.0f, -50.0f, -90.0f);
+
+				glTexCoord2d(1.0,0.0); 
+				glVertex3f(dino->getCoordinateX() + 150.0f, -50.0f, -90.0f);
+
+				glTexCoord2d(1.0,1.0); 
+				glVertex3f(dino->getCoordinateX() + 150.0f, 150.0f, -90.0f);
+
+				glTexCoord2d(0.0,1.0);
+				glVertex3f(dino->getCoordinateX() - 150.0f, 150.0f, -90.0f);			
+				
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, ground_tex);
 
 		glBegin(GL_QUADS);
 				glTexCoord2d(0.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 10.0f, -0.2f, -100.0f);
+				glVertex3f(positionFactor - 100.0f, -0.2f, 10.0f);
 
 				glTexCoord2d(1.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 10.0f, -0.2f,  100.0f);
+				glVertex3f(positionFactor + 100.0f, -0.2f,  10.0f);
 
 				glTexCoord2d(1.0,1.0); 
-				glVertex3f(-100.0f, -0.2f, dino->getCoordinateX() + 10.0f);
+				glVertex3f(positionFactor + 100.0f, -0.2f, -90.0f);
 
 				glTexCoord2d(0.0,1.0);
-				glVertex3f( 100.0f, -0.2f, dino->getCoordinateX() + 10.0f);			
+				glVertex3f(positionFactor - 100.0f, -0.2f, -90.0f);			
 				
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-
 	glPopMatrix();
 }
 

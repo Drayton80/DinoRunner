@@ -11,8 +11,9 @@
 #define IMAGE_HEIGHT 512
 
 GLuint ground_tex;
+GLuint background_tex;
 
-int posititonFactor = 1;
+float positionFactor = 0.0;
 
 // Habilita certas definições e caracteristícas do OpenGL, como luz e 
 // profundidade da cena:
@@ -43,6 +44,14 @@ void initializations(int argumentsC, char **argumentsV){
     ground_tex =   SOIL_load_OGL_texture
       (
         "assets/ground.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+      );
+
+      background_tex =   SOIL_load_OGL_texture
+      (
+        "assets/background.png",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
