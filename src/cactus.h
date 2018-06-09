@@ -54,15 +54,6 @@ Cactus::Cactus(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
-
-    collided = false;
-
     srand(time(NULL));
     random = rand() % 4;
 
@@ -83,15 +74,6 @@ Cactus::Cactus(float currentX, float currentY, float currentZ){
     sizeX = 0.5;
     sizeY = 0.5;
     sizeZ = 0.5;
-
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
-
-    collided = false;
 
     srand(time(NULL));
     random = rand() % 4;
@@ -115,15 +97,6 @@ Cactus::Cactus(float currentX, float currentY, float currentZ,
     sizeX = newSizeX;
     sizeY = newSizeY;
     sizeZ = newSizeZ;
-
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
-
-    collided = false;  
 
     srand(time(NULL));
     random = rand() % 4;

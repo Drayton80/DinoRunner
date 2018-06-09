@@ -31,11 +31,11 @@ void drawString(string s, float x, float y){
 	glRasterPos2f(x, y);
 
 	for (int i = 0; i < s.length(); i++) {
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, s[i]);
+		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, s[i]);
 	}
 }
 
-void gameover(){
+void drawGameOver(){
 
 	drawString("GAME OVER", 0, 0);
 }	

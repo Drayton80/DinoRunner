@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "object.h"
-#include "definitions.h"
 #include "OBJ_Loader.h"
 #include "SOIL.h"
 
@@ -26,14 +25,15 @@ public:
     Dinosaur();
     Dinosaur(float currentX, float currentY, float currentZ);
     Dinosaur(float currentX, float currentY, float currentZ,
-             bool  rotateX , bool  rotateY , bool  rotateZ ,
+             bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
              float angle   , float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void generate(float red, float green, float blue);
     void runAction();
     void jumpAction(bool *jumping, float *descendForced);
-    void collisionEffect();
+    bool collisionCheck(float centerDistanceObject, float objectCoordinateX, 
+                        float objectCoordinateY   , float objectCoordinateZ);
 
     // Métodos Get:
     float getVariationX();
@@ -77,14 +77,11 @@ Dinosaur::Dinosaur(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = 1.0;
 
-    collided = false; 
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 
     // Atributos da Classe:
     variationX = 0;
@@ -112,14 +109,11 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = 1.0;
 
-    collided = false; 
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false;  
 
     // Atributos da Classe:
     variationX = 0;
@@ -133,7 +127,7 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
 }
 
 Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
-                   bool  rotateX , bool  rotateY , bool  rotateZ ,
+                   bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
                    float angle   , float newSizeX, float newSizeY, float newSizeZ){
     // Atributos Herdados:
     coordinateX = currentX;
@@ -149,14 +143,11 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
     sizeY = newSizeY;
     sizeZ = newSizeZ;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = newCenterDistance;
 
-    collided = false;  
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 
     // Atributos da Classe:
     variationX = 0;
@@ -180,7 +171,7 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
  *     aceleração (constante) e velocidade (aumenta conforme o tempo até estabilizar).
  */
 void Dinosaur::runAction(){
-    if(!collided){
+    if(!collidedX || !collidedY || !coordinateZ){
         // O dinossauro só corre se estiver em movimento, pois ele inicia o jogo
         // parado
         if(0 < variationX && variationX <= maxVariationX){
@@ -221,7 +212,7 @@ void Dinosaur::runAction(){
  */
 void Dinosaur::jumpAction(bool *jumping, float *descendForced){
     // Apenas entra aqui durante uma ação de pulo
-    if(*jumping && !collided){
+    if(*jumping && (!collidedX || !collidedY || !coordinateZ)){
         // A coordenada Y é incrementada de acordo com a variationY, que, por sua
         // vez, é decrementada linearmente a cada interação
         coordinateY += variationY + *descendForced;
@@ -233,7 +224,7 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
         // efetivamente só é verdadeira no fim do pulo.
         if(coordinateY <= 0.0){
             coordinateY = 0.0;      // Sua altura agora é definida como 0
-            variationY = 0.17;      // Retorna variationY para seu valor default
+            variationY = 0.2;      // Retorna variationY para seu valor default
 
             *descendForced = 0.0;   // Volta descendForced para seu valor default
             *jumping = false;       // O pulo acabou
@@ -246,53 +237,79 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
     }
 }
 
-void Dinosaur::collisionEffect(){
-    if(collided){
+bool Dinosaur::collisionCheck(float centerDistanceObject, float objectCoordinateX, 
+                              float objectCoordinateY   , float objectCoordinateZ){
+    // Define os planos que limitam a hit box do objeto que será testado o
+    float objectPositivePlanX = objectCoordinateX + centerDistanceObject;
+    float objectNegativePlanX = objectCoordinateX - centerDistanceObject;
+    float objectPositivePlanY = objectCoordinateY + centerDistanceObject;
+    float objectNegativePlanY = objectCoordinateY - centerDistanceObject;
+    float objectPositivePlanZ = objectCoordinateZ + centerDistanceObject;
+    float objectNegativePlanZ = objectCoordinateZ - centerDistanceObject;
+
+    // Define os planos que limitam a hit box do dinossauro:
+    float dinoPositivePlanX = coordinateX + centerDistance;
+    float dinoNegativePlanX = coordinateX - centerDistance; 
+    float dinoPositivePlanY = coordinateY + centerDistance; 
+    float dinoNegativePlanY = coordinateY - centerDistance; 
+    float dinoPositivePlanZ = coordinateZ + centerDistance; 
+    float dinoNegativePlanZ = coordinateZ - centerDistance;  
+
+
+
+    // e, ao mesmo tempo, o Plano Negativo Y (parte
+    // de baixo) do dinossauro estiver abaixo do Plano Positivo Y do objeto (parte de cima), então isso significará
+    // que o cubo de delimitação do dinossauro adentrou os limites do cubo do objeto e, por conseguinte, haverá
+    // colisão
+
+    // Se o Plano Positivo X (parte da frente) do dinossauro estiver dentro dos limites dos planos de delimitação
+    // (hit box) do objeto ou o Plano Negativo X (parte de trás) dele estiver, a colisão em X é detectada
+    if((objectNegativePlanX <= dinoPositivePlanX && dinoPositivePlanX <= objectPositivePlanX)||
+       (objectNegativePlanX <= dinoNegativePlanX && dinoNegativePlanX <= objectPositivePlanX)){
+        //|std::cout << "Colidiu em X na posição ( " << coordinateX << " ) \n";
+        collidedX = true;
+    }
+
+    if((objectNegativePlanY <= dinoPositivePlanY && dinoPositivePlanY <= objectPositivePlanY)||
+       (objectNegativePlanY <= dinoNegativePlanY && dinoNegativePlanY <= objectPositivePlanY)){
+        //|std::cout << "Colidiu em Y na posição ( " << coordinateY << " ) \n";
+        collidedY = true;
+    }
+
+    // OBS.: A soma com +0.5 vem devido ao deslocamento em Z do dinossauro para corrigir o defeito causado
+    //       pelo load mesh
+    if((objectNegativePlanZ <= (dinoPositivePlanZ+0.5) && (dinoPositivePlanZ+0.5) <= objectPositivePlanZ)||
+       (objectNegativePlanZ <= (dinoNegativePlanZ+0.5) && (dinoNegativePlanZ+0.5) <= objectPositivePlanZ)){
+        //|std::cout << "Colidiu em Z na posição ( " << coordinateZ << " ) \n";
+        collidedZ = true;
+    }
+
+    // Consequência da colisão:
+    if(collidedX && collidedY && collidedZ){
         // Se o personagem colidir ele pare de se mover
         variationX = 0;
         variationY = 0;
 
+        return true;
+
         // TO DO - Mudança de textura?
+    }else{
+        // Reseta os valores para o próximo teste:
+        collidedX = false;
+        collidedY = false;
+        collidedZ = false;
+
+        return false;
     }
 }
 
+
 void Dinosaur::generate(float red, float green, float blue){
     glPushMatrix();
-    glTranslatef(coordinateX, coordinateY, coordinateZ);
+    glTranslatef(coordinateX, coordinateY, coordinateZ-1);
     glColor3f(1,1,1);
     glCallList(mesh);
     glPopMatrix();
-}
-
-//----------------------------//-----------------------------------------------------------//
-
-
-// MÈTODOS GET E SET //--------------------------------------------------------------------//
-
-// Métodos Get:
-float Dinosaur::getVariationX(){
-    return variationX;
-}
-
-float Dinosaur::getMaxVariationX(){
-    return maxVariationX;
-}
-
-float Dinosaur::getVariationY(){
-    return variationY;
-}
-
-// Métodos Set:
-void Dinosaur::setVariationX(float newVariationX){
-    variationX = newVariationX;
-}
-
-void Dinosaur::setMaxVariationX(float newMaxVariationX){
-    maxVariationX = newMaxVariationX;
-}
-
-void Dinosaur::setVariationY(float newVariationY){
-    variationY = newVariationY;
 }
 
 void Dinosaur::loadMesh(){
@@ -333,6 +350,37 @@ void Dinosaur::loadMesh(){
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
     glEndList();
+}
+
+//----------------------------//-----------------------------------------------------------//
+
+
+// MÈTODOS GET E SET //--------------------------------------------------------------------//
+
+// Métodos Get:
+float Dinosaur::getVariationX(){
+    return variationX;
+}
+
+float Dinosaur::getMaxVariationX(){
+    return maxVariationX;
+}
+
+float Dinosaur::getVariationY(){
+    return variationY;
+}
+
+// Métodos Set:
+void Dinosaur::setVariationX(float newVariationX){
+    variationX = newVariationX;
+}
+
+void Dinosaur::setMaxVariationX(float newMaxVariationX){
+    maxVariationX = newMaxVariationX;
+}
+
+void Dinosaur::setVariationY(float newVariationY){
+    variationY = newVariationY;
 }
 
 //-------------------//--------------------------------------------------------------------//
