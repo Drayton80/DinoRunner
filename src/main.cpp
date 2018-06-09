@@ -301,73 +301,27 @@ void reshape (int width, int height) {
 	glMatrixMode(GL_MODELVIEW);   
 }
 
-void testLines(){
+void ground(){
 	// Push e Pop matrix servem para isolar uma transformação das demais, ou seja,
 	// fazer uma transformação focar em apenas uma
-	glPushMatrix();
-		float redIncrement   = 0.3;
-		float blueIncrement  = 0.0;
-		float greenIncrement = 0.0;
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, ground_tex);
 
-		int rgbSwitch = 1;
+		glBegin(GL_QUADS);
+				glTexCoord2d(0.0,0.0); 
+				glVertex3f(dino->getCoordinateX() + 10.0f, -0.2f, -100.0f);
 
-		//glTranslatef(0.0f, -0.5f, -3.0f);
+				glTexCoord2d(1.0,0.0); 
+				glVertex3f(dino->getCoordinateX() + 10.0f, -0.2f,  100.0f);
 
-		int maxAndMinLines = 10000;
+				glTexCoord2d(1.0,1.0); 
+				glVertex3f(-100.0f, -0.2f, dino->getCoordinateX() + 10.0f);
 
-		for(int i = -maxAndMinLines; i <= maxAndMinLines; i += 1){
-			// Aqui é feito a transição de cores das linhas verticais:
-			switch(rgbSwitch){
-				case 1:
-					redIncrement  += 0.2;
-					greenIncrement = 0.0;
-					blueIncrement  = 0.0;
-
-					if(redIncrement > 1.0){
-						greenIncrement = 0.3;
-						rgbSwitch = 2;
-					}
-
-					break;
-				case 2:
-					redIncrement    = 0.0;
-					greenIncrement += 0.2;
-					blueIncrement   = 0.0;
-
-					if(greenIncrement > 1.0){
-						blueIncrement = 0.3;
-						rgbSwitch = 3;
-					}
-
-					break;
-				case 3:
-					redIncrement   = 0.0;
-					greenIncrement = 0.0;
-					blueIncrement += 0.2;
-
-					if(blueIncrement > 1.0){
-						redIncrement = 0.3;
-						rgbSwitch = 1;
-					}
-
-					break;
-					
-			}
-
-			// Exibição das linhas:
-			glBegin(GL_LINES);
-				// Linhas Verticais:
-				glColor3f (redIncrement, greenIncrement, blueIncrement);
-				glVertex3f( (float) i, -0.2f, -1000.0f);
-				glVertex3f( (float) i, -0.2f,  1000.0f);
-
-				// Linhas Horizontais:
-				glColor3f (0.4f, 0.4f, 0.4f);
-				glVertex3f(-1000.0f, -0.2f, (float) i);
-				glVertex3f( 1000.0f, -0.2f, (float) i);			
-			glEnd();
-
-		}
+				glTexCoord2d(0.0,1.0);
+				glVertex3f( 100.0f, -0.2f, dino->getCoordinateX() + 10.0f);			
+				
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
 
 	glPopMatrix();
 }
@@ -383,7 +337,7 @@ void display(void){
 
 	camera();
 
-	testLines();
+	ground();
 
 	// A cada 150 unidades de distância são atribuidos novos valores para as coordenadas X e Z
 	// de um conjunto de cactos

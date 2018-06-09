@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include "SOIL.h"
 
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
@@ -8,6 +9,10 @@
 #define PI 3.141592653589793
 #define IMAGE_WIDTH  768
 #define IMAGE_HEIGHT 512
+
+GLuint ground_tex;
+
+int posititonFactor = 1;
 
 // Habilita certas definições e caracteristícas do OpenGL, como luz e 
 // profundidade da cena:
@@ -34,6 +39,14 @@ void initializations(int argumentsC, char **argumentsV){
 						    (glutGet(GLUT_SCREEN_HEIGHT) - IMAGE_HEIGHT)/2);
     // Define o nome que será exibido no topo da janela
     glutCreateWindow ("Dino Runner");
+
+    ground_tex =   SOIL_load_OGL_texture
+      (
+        "assets/ground.png",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+      );
 }
 
 #endif	// DEFINITIONS_H
