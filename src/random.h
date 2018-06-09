@@ -2,6 +2,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include "object.h"
+#include "cactus.h"
 
 using namespace std;
 
@@ -56,7 +57,7 @@ using namespace std;
  *     return 1:
  *       Retorna esse valor quando tudo ocorreu corretamente;
  */
-int randomCactiOnPath(int *positionArray, float CharacterPositionZ, Object **cactiSceneOnPath, 
+int randomCactiOnPath(int *positionArray, float CharacterPositionZ, Cactus **cactiSceneOnPath, 
                       int cactiSceneOnPathArraySize, int begin, int *randomFillBar,
                       int randomFillBarLimit){
 

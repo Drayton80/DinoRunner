@@ -8,6 +8,7 @@
 #include "definitions.h"
 #include "dinosaur.h"
 #include "pterodactylus.h"
+#include "cactus.h"
 #include "object.h"
 #include "random.h"
 #include "bitmap.h"
@@ -17,17 +18,17 @@ using namespace std;
 
 Dinosaur *dino;	// Instanciação do dinossauro corredor
 
-Object *cactiSceneBehind1[100];
-Object *cactiSceneBehind2[100];
-Object *cactiSceneBehind3[100];
+Cactus *cactiSceneBehind1[100];
+Cactus *cactiSceneBehind2[100];
+Cactus *cactiSceneBehind3[100];
 
-Object *cactiSceneOnPath1[150];
-Object *cactiSceneOnPath2[150];
-Object *cactiSceneOnPath3[150];
+Cactus *cactiSceneOnPath1[150];
+Cactus *cactiSceneOnPath2[150];
+Cactus *cactiSceneOnPath3[150];
 
-Object *cactiSceneForward1[100];
-Object *cactiSceneForward2[100];
-Object *cactiSceneForward3[100];
+Cactus *cactiSceneForward1[100];
+Cactus *cactiSceneForward2[100];
+Cactus *cactiSceneForward3[100];
 
 Pterodactylus *pteros1[50];
 Pterodactylus *pteros2[50];
@@ -87,9 +88,9 @@ void objectsInitialPositions(){
     // caso fosse feito haveriam elementos do array não instanciados que tentariam ser usados
     // o que provocaria erros
     for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
-    	cactiSceneOnPath1[i] = new Object();
-		cactiSceneOnPath2[i] = new Object();
-		cactiSceneOnPath3[i] = new Object();
+    	cactiSceneOnPath1[i] = new Cactus();
+		cactiSceneOnPath2[i] = new Cactus();
+		cactiSceneOnPath3[i] = new Cactus();
 
     }
 
@@ -109,13 +110,13 @@ void objectsInitialPositions(){
 		if(i < cactiSceneBehindSize){
 			// A coordenada X é gerada no intervalo de [ 1, 150] - 150, ou seja, de [-149, 0],
 			// a coordenada Y fica em 0 (preso ao chão) e Z fica no intervalo de [-75, -2]
-			cactiSceneBehind1[i] = new Object(randomX-cactiLimit, 0.0, -(rand()%74 + 2));
+			cactiSceneBehind1[i] = new Cactus(randomX-cactiLimit, 0.0, -(rand()%74 + 2));
 			// A coordenada X é gerada no intervalo de [ 1, 150], Y fica em 0 (preso ao chão)
 			// e Z recai no intervalo de [-75, -2]
-			cactiSceneBehind2[i] = new Object(randomX           , 0.0, -(rand()%74 + 2));
+			cactiSceneBehind2[i] = new Cactus(randomX           , 0.0, -(rand()%74 + 2));
 			// A coordenada X é gerada no intervalo de [ 1, 150] + 150, ou seja, de [151, 300],
 			// a coordenada Y fica em 0 (preso ao chão) e Z fica no intervalo de [-75, -2]
-			cactiSceneBehind3[i] = new Object(randomX+cactiLimit, 0.0, -(rand()%74 + 2));
+			cactiSceneBehind3[i] = new Cactus(randomX+cactiLimit, 0.0, -(rand()%74 + 2));
 		}
 
 		// Aqui são gerados os cactos que ficam no caminho pelo qual o dinossauro percorre:
@@ -137,9 +138,9 @@ void objectsInitialPositions(){
 
 		if(i < cactiSceneForwardSize){
 
-			cactiSceneForward1[i] = new Object(randomX-cactiLimit, 0.0, rand()%76);
-			cactiSceneForward2[i] = new Object(randomX           , 0.0, rand()%76);
-			cactiSceneForward3[i] = new Object(randomX+cactiLimit, 0.0, rand()%76);
+			cactiSceneForward1[i] = new Cactus(randomX-cactiLimit, 0.0, rand()%76);
+			cactiSceneForward2[i] = new Cactus(randomX           , 0.0, rand()%76);
+			cactiSceneForward3[i] = new Cactus(randomX+cactiLimit, 0.0, rand()%76);
 		}
 	}
 }
