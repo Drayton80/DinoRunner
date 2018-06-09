@@ -9,6 +9,7 @@
 #define CONTROLS_H
 
 #define SPACE_BAR_KEY 32	// Código ASCII para a barra de espaço
+#define ENTER_KEY 13        // Código ASCII para a tecla de Enter
 #define ESC_KEY 27			// Código ASCII para a tecla de escape
 #define TAB_KEY 9			// Código ASCII para a tecla de TAB
 
@@ -18,7 +19,6 @@ float yRotation = 0;
 float intensity = 0.1;
 float height = 0.0;
 float descend = 0.0;
-bool jump = false;
 float lastX, lastY;
 
 /* Descrição: função criada para ser colocada como parâmetro de entrada
@@ -68,6 +68,13 @@ void keyboard (unsigned char key, int x, int y) {
     		fpsActive = true;
 
     		// TO DO FPS version (Special)
+    	}
+    }
+
+    if(key == ENTER_KEY){
+    	if(collision){
+    		restart = true;
+    		jump = false;
     	}
     }
 
@@ -149,4 +156,3 @@ void controlsDefinitions(){
 }
 
 #endif	// CONTROLS_H
-

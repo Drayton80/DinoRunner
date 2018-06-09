@@ -19,7 +19,7 @@ public:
     Object();
     Object(float currentX, float currentY, float currentZ);
     Object(float currentX, float currentY, float currentZ,
-           bool  rotateX , bool  rotateY , bool  rotateZ ,
+           bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
            float angle   , float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
@@ -36,13 +36,10 @@ public:
     float getSizeX();
     float getSizeY();
     float getSizeZ();
-    float getPlanPositiveX();
-    float getPlanNegativeX();
-    float getPlanPositiveY();
-    float getPlanNegativeY();
-    float getPlanPositiveZ();
-    float getPlanNegativeZ();
-    bool  getCollided();
+    float getCenterDistance();
+    bool  getCollidedX();
+    bool  getCollidedY();
+    bool  getCollidedZ();
     // Prototipação dos Métodos Set:
     void setCoordinateX(float currentX);
     void setCoordinateY(float currentY);
@@ -54,7 +51,10 @@ public:
     void setSizeX(float newSizeX);
     void setSizeY(float newSizeY);
     void setSizeZ(float newSizeZ);
-    void setCollided(bool newCollided);
+    void setCenterDistance(float newCenterDistance);
+    void setCollidedX(bool newCollided);
+    void setCollidedY(bool newCollided);
+    void setCollidedZ(bool newCollided);
 
 protected:
     // Coordenadas da posição do objeto:
@@ -73,16 +73,13 @@ protected:
     float sizeY;
     float sizeZ;
 
-    // Definem os limites da Hit Box do objeto
-    float planPositiveX;
-    float planNegativeX;
-    float planPositiveY;
-    float planNegativeY;
-    float planPositiveZ;
-    float planNegativeZ;
+    // Define a distância do limite da Hit Box do objeto
+    float centerDistance;
 
     // Definidor de colisão do objeto:
-    bool collided;
+    bool collidedX;
+    bool collidedY;
+    bool collidedZ;
 };
 
 
@@ -102,14 +99,11 @@ Object::Object(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = 1.0;
 
-    collided = false;
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false;
 }
 
 Object::Object(float currentX, float currentY, float currentZ){
@@ -126,18 +120,15 @@ Object::Object(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = 1.0;
 
-    collided = false; 
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 }
 
 Object::Object(float currentX, float currentY, float currentZ,
-               bool  rotateX , bool  rotateY , bool  rotateZ ,
+               bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
                float angle   , float newSizeX, float newSizeY, float newSizeZ){
 
     coordinateX = currentX;
@@ -153,14 +144,11 @@ Object::Object(float currentX, float currentY, float currentZ,
     sizeY = newSizeY;
     sizeZ = newSizeZ;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = newCenterDistance;
 
-    collided = false;  
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 }
 
 //--------------//---------------------------------------------------------------------------//
@@ -250,54 +238,33 @@ float Object::getSizeZ(){
     return sizeZ;
 }
 
-float Object::getPlanPositiveX(){
-    return planPositiveX;
+float Object::getCenterDistance(){
+    return centerDistance;
 }
 
-float Object::getPlanNegativeX(){
-    return planNegativeX;
+bool Object::getCollidedX(){
+    return collidedX;
 }
 
-float Object::getPlanPositiveY(){
-    return planPositiveY;
+bool Object::getCollidedY(){
+    return collidedY;
 }
 
-float Object::getPlanNegativeY(){
-    return planNegativeY;
-}
-
-float Object::getPlanPositiveZ(){
-    return planPositiveZ;
-}
-
-float Object::getPlanNegativeZ(){
-    return planNegativeZ;
-}
-
-bool Object::getCollided(){
-    return collided;
+bool Object::getCollidedZ(){
+    return collidedZ;
 }
 
 // Métodos Set:
 void Object::setCoordinateX(float currentX){
     coordinateX = currentX;
-
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
 }
 
 void Object::setCoordinateY(float currentY){
     coordinateY = currentY;
-
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
 }
 
 void Object::setCoordinateZ(float currentZ){
     coordinateZ = currentZ;
-
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
 }
 
 void Object::setRotationX(bool rotateX){
@@ -318,31 +285,34 @@ void Object::setRotationAngle(float rotateAngle){
 
 void Object::setSizeX(float newSizeX){
     sizeX = newSizeX;
-
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
 }
 
 void Object::setSizeY(float newSizeY){
     sizeY = newSizeY;
-
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
 }
 
 void Object::setSizeZ(float newSizeZ){
     sizeZ = newSizeZ;
-
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
 }
 
-void Object::setCollided(bool newCollided){
-    collided = newCollided;
+void Object::setCenterDistance(float newCenterDistance){
+    centerDistance = newCenterDistance;
+}
+
+void Object::setCollidedX(bool newCollidedX){
+    collidedX = newCollidedX;
+}
+
+void Object::setCollidedY(bool newCollidedY){
+    collidedY = newCollidedY;
+}
+
+void Object::setCollidedZ(bool newCollidedZ){
+    collidedZ = newCollidedZ;
 }
 
 //-------------------//---------------------------------------------------------------------//
 
 ///===============///========================================================================================///
 
-#endif	// OBJECT_H
+#endif  // OBJECT_H

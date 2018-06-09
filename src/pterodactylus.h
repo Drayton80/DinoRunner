@@ -20,7 +20,7 @@ public:
     Pterodactylus();
     Pterodactylus(float currentX, float currentY, float currentZ);
     Pterodactylus(float currentX, float currentY, float currentZ,
-                  bool  rotateX , bool  rotateY , bool  rotateZ ,
+                  bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
                   float angle   , float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
@@ -56,14 +56,11 @@ Pterodactylus::Pterodactylus(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
-
-    collided = false; 
+    centerDistance = 1.0;
+    
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 
     // Atributos da classe:
     constantVariationX = -0.06;
@@ -84,21 +81,18 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = 1.0;
 
-    collided = false; 
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 
     // Atributos da Classe:
     constantVariationX = -0.06;
 }
 
 Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
-                             bool  rotateX , bool  rotateY , bool  rotateZ ,
+                             bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
                              float angle   , float newSizeX, float newSizeY, float newSizeZ){
 
     // Atributos herdados:
@@ -115,14 +109,11 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
     sizeY = newSizeY;
     sizeZ = newSizeZ;
 
-    planPositiveX =  sizeX/2 + coordinateX;
-    planNegativeX = -sizeX/2 + coordinateX;
-    planPositiveY =  sizeY/2 + coordinateY;
-    planNegativeY = -sizeY/2 + coordinateY;
-    planPositiveZ =  sizeZ/2 + coordinateZ;
-    planNegativeZ = -sizeZ/2 + coordinateZ;
+    centerDistance = newCenterDistance;
 
-    collided = false;  
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false;  
 
     // Atributos da Classe:
     constantVariationX = -0.06;  
@@ -163,4 +154,4 @@ void Pterodactylus::setConstantVariationX(float newConstantVariationX){
 
 ///=================///========================================================================================///
 
-#endif	// PTERODACTYLUS_H
+#endif  // PTERODACTYLUS_H
