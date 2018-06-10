@@ -30,9 +30,9 @@ Cactus *cactiSceneForward1[1];
 Cactus *cactiSceneForward2[1];
 Cactus *cactiSceneForward3[1];
 
-Pterodactylus *pteros1[15];
-Pterodactylus *pteros2[15];
-Pterodactylus *pteros3[15];
+Pterodactylus *pteros1[50];
+Pterodactylus *pteros2[50];
+Pterodactylus *pteros3[50];
 
 int cactiSceneBehindSize  = sizeof(cactiSceneBehind1) /sizeof(cactiSceneBehind1[0] );
 int cactiSceneOnPathSize  = sizeof(cactiSceneOnPath1) /sizeof(cactiSceneOnPath1[0] );
@@ -62,10 +62,10 @@ float heightCurrent = IMAGE_HEIGHT;
 void objectsInitialPositions(){
 	dino = new Dinosaur(0.0f, 0.0f, -1.0f);
 	dino->setCenterPositiveDistanceX(0.3f);
-	dino->setCenterPositiveDistanceY(0.5f);
+	dino->setCenterPositiveDistanceY(0.6f);
 	dino->setCenterPositiveDistanceZ(0.5f);
 	dino->setCenterNegativeDistanceX(0.3f);
-	dino->setCenterNegativeDistanceY(0.5f);
+	dino->setCenterNegativeDistanceY(0.3f);
 	dino->setCenterNegativeDistanceZ(0.5f);
 
 	cactiLimit = 50;
@@ -75,7 +75,7 @@ void objectsInitialPositions(){
 	fillBar = 0;
 	fillBarLimit = 20;
 	fillBarPteros = 0;
-	fillBarLimitPteros = 30;
+	fillBarLimitPteros = 10;
 
 	float randomX;
 
@@ -124,6 +124,28 @@ void objectsInitialPositions(){
     	pteros1[i] = new Pterodactylus();
     	pteros2[i] = new Pterodactylus();
     	pteros3[i] = new Pterodactylus();
+
+    	// Define o tamanho da distância do centro dos pterodáctilos
+    	pteros1[i]->setCenterPositiveDistanceX(0.35f);
+		pteros1[i]->setCenterPositiveDistanceY( 0.2f);
+		pteros1[i]->setCenterPositiveDistanceZ( 0.5f);
+		pteros1[i]->setCenterNegativeDistanceX( 0.6f);
+		pteros1[i]->setCenterNegativeDistanceY( 0.1f);
+		pteros1[i]->setCenterNegativeDistanceZ( 0.5f);
+
+		pteros2[i]->setCenterPositiveDistanceX(0.35f);
+		pteros2[i]->setCenterPositiveDistanceY( 0.2f);
+		pteros2[i]->setCenterPositiveDistanceZ( 0.5f);
+		pteros2[i]->setCenterNegativeDistanceX( 0.6f);
+		pteros2[i]->setCenterNegativeDistanceY( 0.1f);
+		pteros2[i]->setCenterNegativeDistanceZ( 0.5f);
+
+		pteros3[i]->setCenterPositiveDistanceX(0.35f);
+		pteros3[i]->setCenterPositiveDistanceY( 0.2f);
+		pteros3[i]->setCenterPositiveDistanceZ( 0.5f);
+		pteros3[i]->setCenterNegativeDistanceX( 0.6f);
+		pteros3[i]->setCenterNegativeDistanceY( 0.1f);
+		pteros3[i]->setCenterNegativeDistanceZ( 0.5f);
     }
 
 	for(int i = 0, j = 0, k = 0, l = 0; i < cactiSceneBiggerSize; i++, j++, k++, l++){
@@ -421,6 +443,12 @@ void reshape (int width, int height) {
 void gameOver(){
 	drawGameOver();
 
+	for(unsigned short int i = 0; i < pterosSize; i++){
+		pteros1[i]->setConstantVariationX(0.0f);
+		pteros2[i]->setConstantVariationX(0.0f);
+		pteros3[i]->setConstantVariationX(0.0f);
+	}
+
 	if(restart){
 		positionFactor = 0.0;
 
@@ -463,16 +491,16 @@ void ground(){
 
 		glBegin(GL_QUADS);
 				glTexCoord2d(0.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 90.0f, -50.0f, -50.0f);
+				glVertex3f(dino->getCoordinateX() + 40.0f, -50.0f, -50.0f);
 
 				glTexCoord2d(1.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 90.0f, -50.0f, 50.0f);
+				glVertex3f(dino->getCoordinateX() + 40.0f, -50.0f, 50.0f);
 
 				glTexCoord2d(1.0,1.0); 
-				glVertex3f(dino->getCoordinateX() + 90.0f, 150.0f, 50.0f);
+				glVertex3f(dino->getCoordinateX() + 40.0f, 150.0f, 50.0f);
 
 				glTexCoord2d(0.0,1.0);
-				glVertex3f(dino->getCoordinateX() + 90.0f, 150.0f, -50.0f);			
+				glVertex3f(dino->getCoordinateX() + 40.0f, 150.0f, -50.0f);			
 				
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
@@ -566,15 +594,44 @@ void display(void){
 
 	// Para que não seja visualizada a primeira renderização deles, os pteros são gerados 300 blocos além
 	// da posição definida nesse if, ou seja, o jogador só os vê aproximadamente à partir da posição 450
-	if(300 <= dino->getCoordinateX()){
+	if(50 <= dino->getCoordinateX()){
 		for(unsigned short int i = 0; i < pterosSize; i++){
 
 	    	pteros1[i]->generate(0.4f, 0.4f, 0.4f);
 	    	pteros1[i]->flyAction();
+	    	collision = dino->collisionCheck(pteros1[i]->getCenterPositiveDistanceX(),
+                                             pteros1[i]->getCenterPositiveDistanceY(),
+                                             pteros1[i]->getCenterPositiveDistanceZ(),
+                                             pteros1[i]->getCenterNegativeDistanceX(),
+                                             pteros1[i]->getCenterNegativeDistanceY(),
+                                             pteros1[i]->getCenterNegativeDistanceZ(), 
+                                             pteros1[i]->getCoordinateX(), 
+                                             pteros1[i]->getCoordinateY(), 
+                                             pteros1[i]->getCoordinateZ());
+
 	    	pteros2[i]->generate(0.4f, 0.4f, 0.4f);
 	    	pteros2[i]->flyAction();
+	    	collision = dino->collisionCheck(pteros2[i]->getCenterPositiveDistanceX(),
+                                             pteros2[i]->getCenterPositiveDistanceY(),
+                                             pteros2[i]->getCenterPositiveDistanceZ(),
+                                             pteros2[i]->getCenterNegativeDistanceX(),
+                                             pteros2[i]->getCenterNegativeDistanceY(),
+                                             pteros2[i]->getCenterNegativeDistanceZ(), 
+                                             pteros2[i]->getCoordinateX(), 
+                                             pteros2[i]->getCoordinateY(), 
+                                             pteros2[i]->getCoordinateZ());
+
 	    	pteros3[i]->generate(0.4f, 0.4f, 0.4f);
 	    	pteros3[i]->flyAction();
+	    	collision = dino->collisionCheck(pteros3[i]->getCenterPositiveDistanceX(),
+                                             pteros3[i]->getCenterPositiveDistanceY(),
+                                             pteros3[i]->getCenterPositiveDistanceZ(),
+                                             pteros3[i]->getCenterNegativeDistanceX(),
+                                             pteros3[i]->getCenterNegativeDistanceY(),
+                                             pteros3[i]->getCenterNegativeDistanceZ(), 
+                                             pteros3[i]->getCoordinateX(), 
+                                             pteros3[i]->getCoordinateY(), 
+                                             pteros3[i]->getCoordinateZ());
 	    }
 	}
 	
