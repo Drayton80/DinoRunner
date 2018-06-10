@@ -30,9 +30,9 @@ Cactus *cactiSceneForward1[1];
 Cactus *cactiSceneForward2[1];
 Cactus *cactiSceneForward3[1];
 
-Pterodactylus *pteros1[50];
-Pterodactylus *pteros2[50];
-Pterodactylus *pteros3[50];
+Pterodactylus *pteros1[15];
+Pterodactylus *pteros2[15];
+Pterodactylus *pteros3[15];
 
 int cactiSceneBehindSize  = sizeof(cactiSceneBehind1) /sizeof(cactiSceneBehind1[0] );
 int cactiSceneOnPathSize  = sizeof(cactiSceneOnPath1) /sizeof(cactiSceneOnPath1[0] );
@@ -422,6 +422,8 @@ void gameOver(){
 	drawGameOver();
 
 	if(restart){
+		positionFactor = 0.0;
+
 		objectsRestartPositions();
 
 		restart   = false;
@@ -564,15 +566,15 @@ void display(void){
 
 	// Para que não seja visualizada a primeira renderização deles, os pteros são gerados 300 blocos além
 	// da posição definida nesse if, ou seja, o jogador só os vê aproximadamente à partir da posição 450
-	if(160 <= dino->getCoordinateX()){
+	if(300 <= dino->getCoordinateX()){
 		for(unsigned short int i = 0; i < pterosSize; i++){
 
-	    	pteros1[i]->generate(1.0f, 1.0f, 1.0f);
-	    	//pteros1[i]->flyAction();
-	    	pteros2[i]->generate(1.0f, 1.0f, 1.0f);
-	    	//pteros2[i]->flyAction();
-	    	pteros3[i]->generate(1.0f, 1.0f, 1.0f);
-	    	//pteros3[i]->flyAction();
+	    	pteros1[i]->generate(0.4f, 0.4f, 0.4f);
+	    	pteros1[i]->flyAction();
+	    	pteros2[i]->generate(0.4f, 0.4f, 0.4f);
+	    	pteros2[i]->flyAction();
+	    	pteros3[i]->generate(0.4f, 0.4f, 0.4f);
+	    	pteros3[i]->flyAction();
 	    }
 	}
 	
@@ -595,7 +597,7 @@ void display(void){
 
 	//Carregar o label "SCORE" e o score que cresce com a coodernada X
 	//Carregando a projeção ortogonal
-	unsigned int score = dino->getCoordinateX() * 1.5;
+	unsigned int score = dino->getCoordinateX();
 
 	//Conversão para string
 	string s = to_string(score);

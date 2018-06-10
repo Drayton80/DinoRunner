@@ -239,7 +239,7 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
         // efetivamente só é verdadeira no fim do pulo.
         if(coordinateY <= 0.0){
             coordinateY = 0.0;      // Sua altura agora é definida como 0
-            variationY = 0.2;      // Retorna variationY para seu valor default
+            variationY = 0.21;      // Retorna variationY para seu valor default
 
             *descendForced = 0.0;   // Volta descendForced para seu valor default
             *jumping = false;       // O pulo acabou

@@ -150,7 +150,7 @@ int randomPterodactylusOnPath(int positionArray, float CharacterPositionZ, Ptero
             // Define a coordenada X como o valor de positionArray (referenta a posição dentro do limite
             // de begin até begin+positionArray)
             // OBS.: O rand()%151 serve para espalhar os 50 pteros ao longo de 150 blocos
-            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 300 + rand()%151);
+            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 60 + rand()%50);
             // Há 33% de chance do pterodáctilo vir voando mais alto do que o normal
             // O 1 + (rand()%11 + 1)/10.0f garante que essa variação será de 1.0 até 2.0, pois o
             // rand()%11 + 1 faz com que o intervalo seja de 1 até 10 e a divisão por 10.0f
@@ -170,16 +170,20 @@ int randomPterodactylusOnPath(int positionArray, float CharacterPositionZ, Ptero
         }else{
             // Caso não caia na condição de gerar os cactos no meio do caminho, eles são
             // gerados na exata posição em X, mas com um Z aleatório no resto da cena
-            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 300 + rand()%151);
+            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 60 + rand()%50);
             // Aqui a variação da altura fica entre 1 e 5 para dar mais variação na altitude
             // já que ele não está voando no caminho do dino, não há necessidade de colocar
             // uma altura que ele alcance
-            pterosOnPath[positionArray]->setCoordinateY(1.0 + (rand()%41 + 1)/10.0f);
+            pterosOnPath[positionArray]->setCoordinateY(1.0 + (rand()%40 + 1)/10.0f);
             // Faz um rand de 0 ou 1 para ter 50% de chance dos pterodáctilos cairem na frente
             // ou atrás da cena 
-            rand()%2 == 1 ? pterosOnPath[positionArray]->setCoordinateZ(-(rand()%40 + 5)):
-                            pterosOnPath[positionArray]->setCoordinateZ( (rand()%40 + 5));
+            rand()%2 == 1 ? pterosOnPath[positionArray]->setCoordinateZ(-(rand()%35 + 5)):
+                            pterosOnPath[positionArray]->setCoordinateZ( (rand()%35 + 5));
         }
+
+        //|std::cout << "Posição X do Ptero: " << pterosOnPath[positionArray]->getCoordinateX() << " | ";
+        //|std::cout << "Posição Y do Ptero: " << pterosOnPath[positionArray]->getCoordinateY() << " | ";
+        //|std::cout << "Posição Z do Ptero: " << pterosOnPath[positionArray]->getCoordinateZ() << " \n";
 
         // OBS.: é usado um positionArray auxiliar dentro de um for de i também pois mesmo que não seja 
         //       feita qualquer sequência de cactos ainda sim será preservado o numero de positionArray
