@@ -114,7 +114,8 @@ int randomCactiOnPath(int *positionArray, float CharacterPositionZ, Cactus **cac
             // Caso não caia na condição de gerar os cactos no meio do caminho, eles são
             // gerados na exata posição em X, mas com um Z aleatório no resto da cena
             cactiSceneOnPath[*positionArray]->setCoordinateX(*positionArray+begin);
-            cactiSceneOnPath[*positionArray]->setCoordinateZ(-(rand()%74 + 2));
+            rand()%2 == 1 ? cactiSceneOnPath[*positionArray]->setCoordinateZ(-(rand()%40 + 5)):
+                            cactiSceneOnPath[*positionArray]->setCoordinateZ( (rand()%40 + 5));
         }
 
         // OBS.: é usado um positionArray auxiliar dentro de um for de i também pois mesmo que não seja 
@@ -176,8 +177,8 @@ int randomPterodactylusOnPath(int positionArray, float CharacterPositionZ, Ptero
             pterosOnPath[positionArray]->setCoordinateY(1.0 + (rand()%41 + 1)/10.0f);
             // Faz um rand de 0 ou 1 para ter 50% de chance dos pterodáctilos cairem na frente
             // ou atrás da cena 
-            rand()%2 == 1 ? pterosOnPath[positionArray]->setCoordinateZ(-(rand()%96 + 5)):
-                            pterosOnPath[positionArray]->setCoordinateZ( (rand()%96 + 5));
+            rand()%2 == 1 ? pterosOnPath[positionArray]->setCoordinateZ(-(rand()%40 + 5)):
+                            pterosOnPath[positionArray]->setCoordinateZ( (rand()%40 + 5));
         }
 
         // OBS.: é usado um positionArray auxiliar dentro de um for de i também pois mesmo que não seja 

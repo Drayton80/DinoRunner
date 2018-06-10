@@ -14,6 +14,7 @@ GLuint ground_tex;
 GLuint background_tex;
 
 float positionFactor = 0.0;
+float descend = 0.0;
 
 bool collision = false;
 bool restart = false;

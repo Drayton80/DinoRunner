@@ -18,7 +18,6 @@ float xRotation = 0;
 float yRotation = 0;
 float intensity = 0.1;
 float height = 0.0;
-float descend = 0.0;
 float lastX, lastY;
 
 /* Descrição: função criada para ser colocada como parâmetro de entrada

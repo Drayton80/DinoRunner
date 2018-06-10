@@ -22,8 +22,8 @@ public:
     Pterodactylus();
     Pterodactylus(float currentX, float currentY, float currentZ);
     Pterodactylus(float currentX, float currentY, float currentZ,
-                  bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
-                  float angle   , float newSizeX, float newSizeY, float newSizeZ);
+                  bool  rotateX , bool  rotateY , bool  rotateZ , 
+                  float angle, float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void generate(float red, float green, float blue);
@@ -61,8 +61,13 @@ Pterodactylus::Pterodactylus(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    centerDistance = 1.0;
-    
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
+
     collidedX = false;
     collidedY = false;
     collidedZ = false; 
@@ -88,11 +93,16 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    centerDistance = 1.0;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
-    collidedZ = false; 
+    collidedZ = false;  
 
     // Atributos da Classe:
     constantVariationX = -0.06;
@@ -101,8 +111,8 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ){
 }
 
 Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
-                             bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
-                             float angle   , float newSizeX, float newSizeY, float newSizeZ){
+                             bool  rotateX , bool  rotateY , bool  rotateZ , 
+                             float angle, float newSizeX, float newSizeY, float newSizeZ){
 
     // Atributos herdados:
     coordinateX = currentX;
@@ -114,15 +124,16 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    sizeX = newSizeX;
-    sizeY = newSizeY;
-    sizeZ = newSizeZ;
-
-    centerDistance = newCenterDistance;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
-    collidedZ = false;  
+    collidedZ = false; 
 
     // Atributos da Classe:
     constantVariationX = -0.06;
@@ -165,9 +176,9 @@ void Pterodactylus::setConstantVariationX(float newConstantVariationX){
 
 void Pterodactylus::generate(float red, float green, float blue){
     glPushMatrix();
-    glTranslatef(coordinateX, coordinateY, coordinateZ-1);
-    glColor3f(1,1,1);
-    glCallList(mesh);
+        glTranslatef(coordinateX, coordinateY, coordinateZ);
+        glColor3f(1,1,1);
+        glCallList(mesh);
     glPopMatrix();
 }
 

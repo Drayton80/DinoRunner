@@ -22,8 +22,8 @@ public:
     Cactus();
     Cactus(float currentX, float currentY, float currentZ);
     Cactus(float currentX, float currentY, float currentZ,
-             bool  rotateX , bool  rotateY , bool  rotateZ ,
-             float angle   , float newSizeX, float newSizeY, float newSizeZ);
+           bool  rotateX , bool  rotateY , bool  rotateZ , 
+           float angle, float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void generate(float red, float green, float blue);
@@ -54,6 +54,17 @@ Cactus::Cactus(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
+
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false;
+
     srand(time(NULL));
     random = rand() % 4;
 
@@ -75,6 +86,17 @@ Cactus::Cactus(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
+
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
+
     srand(time(NULL));
     random = rand() % 4;
 
@@ -82,8 +104,8 @@ Cactus::Cactus(float currentX, float currentY, float currentZ){
 }
 
 Cactus::Cactus(float currentX, float currentY, float currentZ,
-                   bool  rotateX , bool  rotateY , bool  rotateZ ,
-                   float angle   , float newSizeX, float newSizeY, float newSizeZ){
+               bool  rotateX , bool  rotateY , bool  rotateZ , 
+               float angle, float newSizeX, float newSizeY, float newSizeZ){
     // Atributos Herdados:
     coordinateX = currentX;
     coordinateY = currentY;
@@ -94,9 +116,16 @@ Cactus::Cactus(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    sizeX = newSizeX;
-    sizeY = newSizeY;
-    sizeZ = newSizeZ;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
+
+    collidedX = false;
+    collidedY = false;
+    collidedZ = false; 
 
     srand(time(NULL));
     random = rand() % 4;
@@ -127,8 +156,9 @@ void Cactus::loadMesh(){
     {
         glPushMatrix();
         glColor3f(curMesh.MeshMaterial.Kd.X, curMesh.MeshMaterial.Kd.Y, curMesh.MeshMaterial.Kd.Z);
+        glTranslatef(0.0f, 0.5f, 0.0f);
         glRotatef(90, 0.0f, 1.0f, 0.0f);
-        glScalef(0.05, 0.05, 0.05);
+        glScalef(0.04, 0.04, 0.04);
         glBegin(GL_TRIANGLES);
             for (int j = 0; j < curMesh.Indices.size(); j+=3){
                 glVertex3f(curMesh.Vertices[curMesh.Indices[j]].Position.X, curMesh.Vertices[curMesh.Indices[j]].Position.Y, curMesh.Vertices[curMesh.Indices[j]].Position.Z);

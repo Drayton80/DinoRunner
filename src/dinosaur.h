@@ -25,25 +25,29 @@ public:
     Dinosaur();
     Dinosaur(float currentX, float currentY, float currentZ);
     Dinosaur(float currentX, float currentY, float currentZ,
-             bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
-             float angle   , float newSizeX, float newSizeY, float newSizeZ);
+             bool  rotateX , bool  rotateY , bool  rotateZ , 
+             float angle, float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void generate(float red, float green, float blue);
     void runAction();
     void jumpAction(bool *jumping, float *descendForced);
-    bool collisionCheck(float centerDistanceObject, float objectCoordinateX, 
-                        float objectCoordinateY   , float objectCoordinateZ);
+    bool collisionCheck(float centerPositiveDistanceObjectX, float centerPositiveDistanceObjectY, 
+                        float centerPositiveDistanceObjectZ, float centerNegativeDistanceObjectX, 
+                        float centerNegativeDistanceObjectY, float centerNegativeDistanceObjectZ,  
+                        float objectCoordinateX, float objectCoordinateY, float objectCoordinateZ);
 
     // Métodos Get:
     float getVariationX();
     float getMaxVariationX();
     float getVariationY();
+    float getDecrementVariationY();
 
     // Métodos Set:
     void setVariationX(float newVariationX);
     void setMaxVariationX(float newMaxVariationX);
     void setVariationY(float newVariationY);
+    void setDecrementVariationY(float newDecrementVariationY);
 
 private:
     // Atributos que guardam informações sobre a variação do
@@ -77,7 +81,12 @@ Dinosaur::Dinosaur(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    centerDistance = 1.0;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
@@ -109,7 +118,12 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    centerDistance = 1.0;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
@@ -127,8 +141,8 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
 }
 
 Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
-                   bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
-                   float angle   , float newSizeX, float newSizeY, float newSizeZ){
+                   bool  rotateX , bool  rotateY , bool  rotateZ , 
+                   float angle, float newSizeX, float newSizeY, float newSizeZ){
     // Atributos Herdados:
     coordinateX = currentX;
     coordinateY = currentY;
@@ -139,11 +153,12 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    sizeX = newSizeX;
-    sizeY = newSizeY;
-    sizeZ = newSizeZ;
-
-    centerDistance = newCenterDistance;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
@@ -237,23 +252,25 @@ void Dinosaur::jumpAction(bool *jumping, float *descendForced){
     }
 }
 
-bool Dinosaur::collisionCheck(float centerDistanceObject, float objectCoordinateX, 
-                              float objectCoordinateY   , float objectCoordinateZ){
+bool Dinosaur::collisionCheck(float centerPositiveDistanceObjectX, float centerPositiveDistanceObjectY, 
+                              float centerPositiveDistanceObjectZ, float centerNegativeDistanceObjectX, 
+                              float centerNegativeDistanceObjectY, float centerNegativeDistanceObjectZ,  
+                              float objectCoordinateX, float objectCoordinateY, float objectCoordinateZ){
     // Define os planos que limitam a hit box do objeto que será testado o
-    float objectPositivePlanX = objectCoordinateX + centerDistanceObject;
-    float objectNegativePlanX = objectCoordinateX - centerDistanceObject;
-    float objectPositivePlanY = objectCoordinateY + centerDistanceObject;
-    float objectNegativePlanY = objectCoordinateY - centerDistanceObject;
-    float objectPositivePlanZ = objectCoordinateZ + centerDistanceObject;
-    float objectNegativePlanZ = objectCoordinateZ - centerDistanceObject;
+    float objectPositivePlanX = objectCoordinateX + centerPositiveDistanceObjectX;
+    float objectNegativePlanX = objectCoordinateX - centerNegativeDistanceObjectX;
+    float objectPositivePlanY = objectCoordinateY + centerPositiveDistanceObjectY;
+    float objectNegativePlanY = objectCoordinateY - centerNegativeDistanceObjectY;
+    float objectPositivePlanZ = objectCoordinateZ + centerPositiveDistanceObjectZ;
+    float objectNegativePlanZ = objectCoordinateZ - centerNegativeDistanceObjectZ;
 
     // Define os planos que limitam a hit box do dinossauro:
-    float dinoPositivePlanX = coordinateX + centerDistance;
-    float dinoNegativePlanX = coordinateX - centerDistance; 
-    float dinoPositivePlanY = coordinateY + centerDistance; 
-    float dinoNegativePlanY = coordinateY - centerDistance; 
-    float dinoPositivePlanZ = coordinateZ + centerDistance; 
-    float dinoNegativePlanZ = coordinateZ - centerDistance;  
+    float dinoPositivePlanX = coordinateX + centerPositiveDistanceX;
+    float dinoNegativePlanX = coordinateX - centerNegativeDistanceX; 
+    float dinoPositivePlanY = coordinateY + centerPositiveDistanceY; 
+    float dinoNegativePlanY = coordinateY - centerNegativeDistanceY; 
+    float dinoPositivePlanZ = coordinateZ + centerPositiveDistanceZ; 
+    float dinoNegativePlanZ = coordinateZ - centerNegativeDistanceZ;  
 
 
 
@@ -306,9 +323,9 @@ bool Dinosaur::collisionCheck(float centerDistanceObject, float objectCoordinate
 
 void Dinosaur::generate(float red, float green, float blue){
     glPushMatrix();
-    glTranslatef(coordinateX, coordinateY, coordinateZ-1);
-    glColor3f(1,1,1);
-    glCallList(mesh);
+        glTranslatef(coordinateX, coordinateY, coordinateZ-1);
+        glColor3f(1,1,1);
+        glCallList(mesh);
     glPopMatrix();
 }
 
@@ -370,6 +387,11 @@ float Dinosaur::getVariationY(){
     return variationY;
 }
 
+
+float Dinosaur::getDecrementVariationY(){
+    return decrementVariationY;
+}
+
 // Métodos Set:
 void Dinosaur::setVariationX(float newVariationX){
     variationX = newVariationX;
@@ -381,6 +403,10 @@ void Dinosaur::setMaxVariationX(float newMaxVariationX){
 
 void Dinosaur::setVariationY(float newVariationY){
     variationY = newVariationY;
+}
+
+void Dinosaur::setDecrementVariationY(float newDecrementVariationY){
+    decrementVariationY = newDecrementVariationY;
 }
 
 //-------------------//--------------------------------------------------------------------//

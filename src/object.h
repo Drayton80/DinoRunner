@@ -19,8 +19,8 @@ public:
     Object();
     Object(float currentX, float currentY, float currentZ);
     Object(float currentX, float currentY, float currentZ,
-           bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
-           float angle   , float newSizeX, float newSizeY, float newSizeZ);
+           bool  rotateX , bool  rotateY , bool  rotateZ , 
+           float angle, float newSizeX, float newSizeY, float newSizeZ);
 
     // Prototipação dos Métodos de Propósito Geral:
     void generate(float red, float green, float blue);
@@ -36,7 +36,12 @@ public:
     float getSizeX();
     float getSizeY();
     float getSizeZ();
-    float getCenterDistance();
+    float getCenterPositiveDistanceX();
+    float getCenterPositiveDistanceY();
+    float getCenterPositiveDistanceZ();
+    float getCenterNegativeDistanceX();
+    float getCenterNegativeDistanceY();
+    float getCenterNegativeDistanceZ();
     bool  getCollidedX();
     bool  getCollidedY();
     bool  getCollidedZ();
@@ -51,7 +56,12 @@ public:
     void setSizeX(float newSizeX);
     void setSizeY(float newSizeY);
     void setSizeZ(float newSizeZ);
-    void setCenterDistance(float newCenterDistance);
+    void setCenterPositiveDistanceX(float newCenterPositiveDistanceX);
+    void setCenterPositiveDistanceY(float newCenterPositiveDistanceY);
+    void setCenterPositiveDistanceZ(float newCenterPositiveDistanceZ);
+    void setCenterNegativeDistanceX(float newCenterNegativeDistanceX);
+    void setCenterNegativeDistanceY(float newCenterNegativeDistanceY);
+    void setCenterNegativeDistanceZ(float newCenterNegativeDistanceZ);
     void setCollidedX(bool newCollided);
     void setCollidedY(bool newCollided);
     void setCollidedZ(bool newCollided);
@@ -74,7 +84,12 @@ protected:
     float sizeZ;
 
     // Define a distância do limite da Hit Box do objeto
-    float centerDistance;
+    float centerPositiveDistanceX;
+    float centerPositiveDistanceY;
+    float centerPositiveDistanceZ;
+    float centerNegativeDistanceX;
+    float centerNegativeDistanceY;
+    float centerNegativeDistanceZ;
 
     // Definidor de colisão do objeto:
     bool collidedX;
@@ -99,7 +114,12 @@ Object::Object(){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    centerDistance = 1.0;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
@@ -120,7 +140,12 @@ Object::Object(float currentX, float currentY, float currentZ){
     sizeY = 0.5;
     sizeZ = 0.5;
 
-    centerDistance = 1.0;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
@@ -128,8 +153,8 @@ Object::Object(float currentX, float currentY, float currentZ){
 }
 
 Object::Object(float currentX, float currentY, float currentZ,
-               bool  rotateX , bool  rotateY , bool  rotateZ , float newCenterDistance,
-               float angle   , float newSizeX, float newSizeY, float newSizeZ){
+               bool  rotateX , bool  rotateY , bool  rotateZ , 
+               float angle, float newSizeX, float newSizeY, float newSizeZ){
 
     coordinateX = currentX;
     coordinateY = currentY;
@@ -140,11 +165,12 @@ Object::Object(float currentX, float currentY, float currentZ,
     rotationZ = rotateZ;
     rotationAngle = angle;
 
-    sizeX = newSizeX;
-    sizeY = newSizeY;
-    sizeZ = newSizeZ;
-
-    centerDistance = newCenterDistance;
+    centerPositiveDistanceX = 0.5;
+    centerPositiveDistanceY = 0.5;
+    centerPositiveDistanceZ = 0.5;
+    centerNegativeDistanceX = 0.5;
+    centerNegativeDistanceY = 0.5;
+    centerNegativeDistanceZ = 0.5;
 
     collidedX = false;
     collidedY = false;
@@ -238,8 +264,28 @@ float Object::getSizeZ(){
     return sizeZ;
 }
 
-float Object::getCenterDistance(){
-    return centerDistance;
+float Object::getCenterPositiveDistanceX(){
+    return centerPositiveDistanceX;
+}
+
+float Object::getCenterPositiveDistanceY(){
+    return centerPositiveDistanceY;
+}
+
+float Object::getCenterPositiveDistanceZ(){
+    return centerPositiveDistanceZ;
+}
+
+float Object::getCenterNegativeDistanceX(){
+    return centerNegativeDistanceX;
+}
+
+float Object::getCenterNegativeDistanceY(){
+    return centerNegativeDistanceY;
+}
+
+float Object::getCenterNegativeDistanceZ(){
+    return centerNegativeDistanceZ;
 }
 
 bool Object::getCollidedX(){
@@ -295,8 +341,28 @@ void Object::setSizeZ(float newSizeZ){
     sizeZ = newSizeZ;
 }
 
-void Object::setCenterDistance(float newCenterDistance){
-    centerDistance = newCenterDistance;
+void Object::setCenterPositiveDistanceX(float newCenterPositiveDistanceX){
+    centerPositiveDistanceX = newCenterPositiveDistanceX;
+}
+
+void Object::setCenterPositiveDistanceY(float newCenterPositiveDistanceY){
+    centerPositiveDistanceY = newCenterPositiveDistanceY;
+}
+
+void Object::setCenterPositiveDistanceZ(float newCenterPositiveDistanceZ){
+    centerPositiveDistanceZ = newCenterPositiveDistanceZ;
+}
+
+void Object::setCenterNegativeDistanceX(float newCenterNegativeDistanceX){
+    centerNegativeDistanceX = newCenterNegativeDistanceX;
+}
+
+void Object::setCenterNegativeDistanceY(float newCenterNegativeDistanceY){
+    centerNegativeDistanceY = newCenterNegativeDistanceY;
+}
+
+void Object::setCenterNegativeDistanceZ(float newCenterNegativeDistanceZ){
+    centerNegativeDistanceZ = newCenterNegativeDistanceZ;
 }
 
 void Object::setCollidedX(bool newCollidedX){
