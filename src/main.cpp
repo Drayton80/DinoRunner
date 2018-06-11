@@ -41,6 +41,10 @@ int cactiSceneBiggerSize;
 
 int pterosSize = sizeof(pteros1) /sizeof(pteros1[0]);
 
+unsigned int score;
+
+unsigned short int beginPteros;
+
 unsigned short int cactiLimit;
 unsigned int cactiGenerateBegin;
 short int cactiGenerateSwitch;
@@ -75,7 +79,11 @@ void objectsInitialPositions(){
 	fillBar = 0;
 	fillBarLimit = 20;
 	fillBarPteros = 0;
-	fillBarLimitPteros = 10;
+	fillBarLimitPteros = 30;
+
+	score = 0;
+
+	beginPteros = 300;
 
 	float randomX;
 
@@ -126,26 +134,26 @@ void objectsInitialPositions(){
     	pteros3[i] = new Pterodactylus();
 
     	// Define o tamanho da distância do centro dos pterodáctilos
-    	pteros1[i]->setCenterPositiveDistanceX(0.35f);
-		pteros1[i]->setCenterPositiveDistanceY( 0.2f);
-		pteros1[i]->setCenterPositiveDistanceZ( 0.5f);
-		pteros1[i]->setCenterNegativeDistanceX( 0.6f);
-		pteros1[i]->setCenterNegativeDistanceY( 0.1f);
-		pteros1[i]->setCenterNegativeDistanceZ( 0.5f);
+    	pteros1[i]->setCenterPositiveDistanceX(0.3f);
+		pteros1[i]->setCenterPositiveDistanceY(0.2f);
+		pteros1[i]->setCenterPositiveDistanceZ(0.5f);
+		pteros1[i]->setCenterNegativeDistanceX(0.6f);
+		pteros1[i]->setCenterNegativeDistanceY(0.1f);
+		pteros1[i]->setCenterNegativeDistanceZ(0.5f);
 
-		pteros2[i]->setCenterPositiveDistanceX(0.35f);
-		pteros2[i]->setCenterPositiveDistanceY( 0.2f);
-		pteros2[i]->setCenterPositiveDistanceZ( 0.5f);
-		pteros2[i]->setCenterNegativeDistanceX( 0.6f);
-		pteros2[i]->setCenterNegativeDistanceY( 0.1f);
-		pteros2[i]->setCenterNegativeDistanceZ( 0.5f);
+		pteros2[i]->setCenterPositiveDistanceX(0.3f);
+		pteros2[i]->setCenterPositiveDistanceY(0.2f);
+		pteros2[i]->setCenterPositiveDistanceZ(0.5f);
+		pteros2[i]->setCenterNegativeDistanceX(0.6f);
+		pteros2[i]->setCenterNegativeDistanceY(0.1f);
+		pteros2[i]->setCenterNegativeDistanceZ(0.5f);
 
-		pteros3[i]->setCenterPositiveDistanceX(0.35f);
-		pteros3[i]->setCenterPositiveDistanceY( 0.2f);
-		pteros3[i]->setCenterPositiveDistanceZ( 0.5f);
-		pteros3[i]->setCenterNegativeDistanceX( 0.6f);
-		pteros3[i]->setCenterNegativeDistanceY( 0.1f);
-		pteros3[i]->setCenterNegativeDistanceZ( 0.5f);
+		pteros3[i]->setCenterPositiveDistanceX(0.3f);
+		pteros3[i]->setCenterPositiveDistanceY(0.2f);
+		pteros3[i]->setCenterPositiveDistanceZ(0.5f);
+		pteros3[i]->setCenterNegativeDistanceX(0.6f);
+		pteros3[i]->setCenterNegativeDistanceY(0.1f);
+		pteros3[i]->setCenterNegativeDistanceZ(0.5f);
     }
 
 	for(int i = 0, j = 0, k = 0, l = 0; i < cactiSceneBiggerSize; i++, j++, k++, l++){
@@ -202,6 +210,11 @@ void objectsNextPositions(){
 
 	switch(cactiGenerateSwitch){
 		case 0:
+			// Move o bloco mais atrás onde é gerado o chão para depois do último
+			// bloco, fazendo com que o que estava atrás vá para frente sem haver alteração
+			// na exibição do do meio (onde está a câmera)
+			positionFactor1 = positionFactor3 + cactiLimit;
+
 			for(int i = 0, j = 0; i < cactiSceneBiggerSize; i++, j++){
 				// Cria um novo valor aleatório começando de uma posição 150
 				// blocos mais à frente do dinossauro (como o far plane da câmera
@@ -229,8 +242,9 @@ void objectsNextPositions(){
 					              cactiSceneOnPathSize, cactiGenerateBegin,
                                   &fillBar, fillBarLimit);
 				
-				randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros1, pterosSize, cactiGenerateBegin, 
-			                              &fillBarPteros, fillBarLimitPteros);
+				if(beginPteros <= dino->getCoordinateX())
+					randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros1, pterosSize, cactiGenerateBegin, 
+			                                  &fillBarPteros, fillBarLimitPteros);				
 
 				if(i < cactiSceneForwardSize){
 					// Define novas coordenadas para os cactos da frente:
@@ -244,6 +258,11 @@ void objectsNextPositions(){
 			break;
 
 		case 1:
+			// Move o bloco mais atrás onde é gerado o chão para depois do último
+			// bloco, fazendo com que o que estava atrás vá para frente sem haver alteração
+			// na exibição do do meio (onde está a câmera)
+			positionFactor2 = positionFactor1 + cactiLimit;
+
 			for(int i = 0, j = 0; i < cactiSceneBiggerSize; i++, j++){
 				randomX = rand()%cactiLimit + 1 + cactiGenerateBegin;
 
@@ -262,8 +281,9 @@ void objectsNextPositions(){
 						          cactiSceneOnPathSize, cactiGenerateBegin,
                                   &fillBar, fillBarLimit);
 				
-				randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros2, pterosSize, cactiGenerateBegin, 
-			                              &fillBarPteros, fillBarLimitPteros);
+				if(beginPteros <= dino->getCoordinateX())
+					randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros2, pterosSize, cactiGenerateBegin, 
+			    	                          &fillBarPteros, fillBarLimitPteros);
 				
 
 				if(i < cactiSceneForwardSize){
@@ -278,6 +298,11 @@ void objectsNextPositions(){
 			break;
 
 		case 2:
+			// Move o bloco mais atrás onde é gerado o chão para depois do último
+			// bloco, fazendo com que o que estava atrás vá para frente sem haver alteração
+			// na exibição do do meio (onde está a câmera)
+			positionFactor3 = positionFactor2 + cactiLimit;
+
 			for(int i = 0, j = 0; i < cactiSceneBiggerSize; i++, j++){
 				randomX = rand()%cactiLimit + 1 + cactiGenerateBegin;
 
@@ -295,9 +320,9 @@ void objectsNextPositions(){
 						          cactiSceneOnPathSize, cactiGenerateBegin,
                                   &fillBar, fillBarLimit);
 					
-				
-				randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros3, pterosSize, cactiGenerateBegin, 
-			                              &fillBarPteros, fillBarLimitPteros);
+				if(beginPteros <= dino->getCoordinateX())
+					randomPterodactylusOnPath(i, dino->getCoordinateZ(), pteros3, pterosSize, cactiGenerateBegin, 
+			    	                          &fillBarPteros, fillBarLimitPteros);
 
 
 				if(i < cactiSceneForwardSize){
@@ -317,7 +342,7 @@ void objectsNextPositions(){
 void objectsRestartPositions(){
 	dino->setCoordinateX( 0.0f);
 	dino->setCoordinateY( 0.0f);
-	dino->setCoordinateX(-1.0f);
+	dino->setCoordinateZ(-1.0f);
 	dino->setCollidedX(false);
 	dino->setCollidedY(false);
 	dino->setCollidedZ(false);
@@ -336,7 +361,26 @@ void objectsRestartPositions(){
 	fillBarPteros = 0;
 	fillBarLimitPteros = 30;
 
+	score = 0;
+
 	float randomX;
+
+	for(unsigned short int i = 0; i < pterosSize; i++){
+		pteros1[i]->setCoordinateX(0.0f);
+		pteros1[i]->setCoordinateY(0.0f);
+		pteros1[i]->setCoordinateZ(0.0f);
+		pteros1[i]->setConstantVariationX(-0.06);
+
+		pteros2[i]->setCoordinateX(0.0f);
+		pteros2[i]->setCoordinateY(0.0f);
+		pteros2[i]->setCoordinateZ(0.0f);
+		pteros2[i]->setConstantVariationX(-0.06);
+
+		pteros3[i]->setCoordinateX(0.0f);
+		pteros3[i]->setCoordinateY(0.0f);
+		pteros3[i]->setCoordinateZ(0.0f);
+		pteros3[i]->setConstantVariationX(-0.06);
+	}
 
 	// Aqui é verificado qual o maior de todos os sizes, comparando primeiramente behind com onPath
 	// e depois forward com o resultado anterior
@@ -407,7 +451,7 @@ void objectsRestartPositions(){
 void camera (void) {
 	// Se o modo fps estiver ativo a câmera fica livre para se movimentar:
 	if(fpsActive){
-		glTranslatef( -dino->getCoordinateZ(), -dino->getCoordinateY() - 0.5, dino->getCoordinateX() - 0.8);
+		glTranslatef(-dino->getCoordinateZ(), -dino->getCoordinateY() - 0.7, dino->getCoordinateX()-0.5);
 		// É preciso primeiramente rotacionar a camera 90º em torno do eixo Y para que ela comece
 		// a apontar para onde o dinossauro aponta
 		// OBS.: No OpenGL a chamada das matrizes mais abaixo ocorre primeiro, sendo isso devido ao fato
@@ -441,7 +485,21 @@ void reshape (int width, int height) {
 }
 
 void gameOver(){
-	drawGameOver();
+	setOrtho(widthCurrent, heightCurrent);
+		glLoadIdentity();
+
+		glTranslatef( 0.0, 0.0, -2.0);
+
+		glColor4f(0.0, 0.0, 0.0, 0.5);
+		glBegin(GL_POLYGON);
+			glVertex3f(widthCurrent, heightCurrent, -2.0);
+			glVertex3f(         0.0, heightCurrent, -2.0);
+			glVertex3f(         0.0,           0.0, -2.0);
+			glVertex3f(widthCurrent,           0.0, -2.0);
+		glEnd();
+
+		drawGameOver(widthCurrent, heightCurrent);
+	restoreView();
 
 	for(unsigned short int i = 0; i < pterosSize; i++){
 		pteros1[i]->setConstantVariationX(0.0f);
@@ -450,7 +508,9 @@ void gameOver(){
 	}
 
 	if(restart){
-		positionFactor = 0.0;
+		positionFactor1 =   0.0;
+		positionFactor2 =  50.0;
+		positionFactor3 = 100.0;
 
 		objectsRestartPositions();
 
@@ -460,14 +520,81 @@ void gameOver(){
 }
 
 void ground(){
-	// Push e Pop matrix servem para isolar uma transformação das demais, ou seja,
-	// fazer uma transformação focar em apenas uma
-	if((int)dino->getCoordinateX() % 50 == 0 && (int)dino->getCoordinateX() != 0){
-		positionFactor = (int)dino->getCoordinateX() + 50;
-	}
 	glPushMatrix();
 
+	GLfloat orange[] = {1.0, 0.45, 0.0, 1.0};
+	glMaterialfv(GL_FRONT, GL_AMBIENT, orange);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, orange);
 
+	for(unsigned short int i = 0; i < 5; i++){
+		for(unsigned short int j = 0; j < 5; j++){
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ground_tex);
+
+			glBegin(GL_QUADS);
+					glTexCoord2d(0.0,0.0); 
+					glVertex3f(positionFactor1 - i*10, -0.2f,  j*10);
+
+					glTexCoord2d(1.0,0.0); 
+					glVertex3f(positionFactor1 + i*10, -0.2f,  j*10);
+
+					glTexCoord2d(1.0,1.0); 
+					glVertex3f(positionFactor1 + i*10, -0.2f, -j*10);
+
+					glTexCoord2d(0.0,1.0);
+					glVertex3f(positionFactor1 - i*10, -0.2f, -j*10);			
+					
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ground_tex);
+
+			glBegin(GL_QUADS);
+					glTexCoord2d(0.0,0.0); 
+					glVertex3f(positionFactor2 - i*10, -0.2f,  j*10);
+
+					glTexCoord2d(1.0,0.0); 
+					glVertex3f(positionFactor2 + i*10, -0.2f,  j*10);
+
+					glTexCoord2d(1.0,1.0); 
+					glVertex3f(positionFactor2 + i*10, -0.2f, -j*10);
+
+					glTexCoord2d(0.0,1.0);
+					glVertex3f(positionFactor2 - i*10, -0.2f, -j*10);			
+					
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ground_tex);
+
+			glBegin(GL_QUADS);
+					glTexCoord2d(0.0,0.0); 
+					glVertex3f(positionFactor3 - i*10, -0.2f,  j*10);
+
+					glTexCoord2d(1.0,0.0); 
+					glVertex3f(positionFactor3 + i*10, -0.2f,  j*10);
+
+					glTexCoord2d(1.0,1.0); 
+					glVertex3f(positionFactor3 + i*10, -0.2f, -j*10);
+
+					glTexCoord2d(0.0,1.0);
+					glVertex3f(positionFactor3 - i*10, -0.2f, -j*10);			
+					
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
+	glPopMatrix();
+}
+
+void background(){
+	// Push e Pop matrix servem para isolar uma ou mais transformações das demais ao
+	// mudar para um estado que é englobado pelo anterior, mas não interfere nele, ou seja,
+	// fazer uma ou mais transformações focarem em apenas um escopo de glPushMatrix()[...]glPopMatrix()
+	// OBS.: É similar ao funcionamento de um abre e fecha {}
+	glPushMatrix();
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, background_tex);
 		glBegin(GL_QUADS);
@@ -504,188 +631,255 @@ void ground(){
 				
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, ground_tex);
-
-			glBegin(GL_QUADS);
-					glTexCoord2d(0.0,0.0); 
-					glVertex3f(positionFactor - 100.0f, -0.2f, 50.0f);
-
-					glTexCoord2d(1.0,0.0); 
-					glVertex3f(positionFactor + 100.0f, -0.2f,  50.0f);
-
-					glTexCoord2d(1.0,1.0); 
-					glVertex3f(positionFactor + 100.0f, -0.2f, -50.0f);
-
-					glTexCoord2d(0.0,1.0);
-					glVertex3f(positionFactor - 100.0f, -0.2f, -50.0f);			
-					
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 }
 
 void display(void){
-	// Define a cor de limpeza do:
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	// Limpa o color buffer e o depth buffer com a cor indicada:
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// Carrega a matriz identidade no conjunto de matrizes para
-	// poder limpar as matrizes de mudança
-	glLoadIdentity();
+	if(startGame){
+		// Define as posições iniciais de cada objeto no mundo:
+		objectsInitialPositions();
 
-	camera();
-
-	ground();
-
-	// A cada 150 unidades de distância são atribuidos novos valores para as coordenadas X e Z
-	// de um conjunto de cactos
-	if(cactiGenerateBegin <= dino->getCoordinateX()){
-		objectsNextPositions();
+		startGame = false;
 	}
 
-	// Aqui ocorre a geração dos objetos atrás do dinossauro em relação à câmera (no modo câmera padrão)
-	for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
+	if(menu){
+		// Define a cor de limpeza do:
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// Limpa o color buffer e o depth buffer com a cor indicada:
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Carrega a matriz identidade no conjunto de matrizes para
+		// poder limpar as matrizes de mudança
+		glLoadIdentity();
 
-		cactiSceneBehind1[i]->generate(0.0f, 0.4f, 0.0f);
-		cactiSceneBehind2[i]->generate(0.0f, 0.4f, 0.0f);
-		cactiSceneBehind3[i]->generate(0.0f, 0.4f, 0.0f);
+		setOrtho(widthCurrent, heightCurrent);
+			drawMenuTitle(widthCurrent, heightCurrent);
+		restoreView();
 
-	}
+		// Troca os buffers
+	    glutSwapBuffers();
+	}else{
+		// Define a cor de limpeza do:
+		glClearColor(1.0f, 0.45f, 0.0f, 1.0f);
+		// Limpa o color buffer e o depth buffer com a cor indicada:
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Carrega a matriz identidade no conjunto de matrizes para
+		// poder limpar as matrizes de mudança
+		glLoadIdentity();
 
-	//OBS.: É necessário um for separado pois as diversas iterações de um for conjunto fazem com
-	//      que alguns cactos de trás da cena fiquem à frente dos on Path
-	for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
+		camera();
 
-		cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
-		collision = dino->collisionCheck(cactiSceneOnPath1[i]->getCenterPositiveDistanceX(),
-		                                 cactiSceneOnPath1[i]->getCenterPositiveDistanceY(),
-		                                 cactiSceneOnPath1[i]->getCenterPositiveDistanceZ(),
-		                                 cactiSceneOnPath1[i]->getCenterNegativeDistanceX(),
-		                                 cactiSceneOnPath1[i]->getCenterNegativeDistanceY(),
-		                                 cactiSceneOnPath1[i]->getCenterNegativeDistanceZ(), 
-		                                 cactiSceneOnPath1[i]->getCoordinateX(), 
-		                                 cactiSceneOnPath1[i]->getCoordinateY(), 
-		                                 cactiSceneOnPath1[i]->getCoordinateZ());
-	
-		cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
-		collision = dino->collisionCheck(cactiSceneOnPath2[i]->getCenterPositiveDistanceX(),
-		                                 cactiSceneOnPath2[i]->getCenterPositiveDistanceY(),
-		                                 cactiSceneOnPath2[i]->getCenterPositiveDistanceZ(),
-		                                 cactiSceneOnPath2[i]->getCenterNegativeDistanceX(),
-		                                 cactiSceneOnPath2[i]->getCenterNegativeDistanceY(),
-		                                 cactiSceneOnPath2[i]->getCenterNegativeDistanceZ(), 
-		                                 cactiSceneOnPath2[i]->getCoordinateX(), 
-		                                 cactiSceneOnPath2[i]->getCoordinateY(), 
-		                                 cactiSceneOnPath2[i]->getCoordinateZ());
+		background();
+		ground();
+
+		// A cada 50 unidades de distância são atribuidos novos valores para as coordenadas X e Z
+		// de um conjunto de cactos
+		if(cactiGenerateBegin <= dino->getCoordinateX()){
+			objectsNextPositions();
+		}
+
+		// Aqui ocorre a geração dos objetos atrás do dinossauro em relação à câmera (no modo câmera padrão)
+		for(unsigned short int i = 0; i < cactiSceneBehindSize; i++){
+
+			cactiSceneBehind1[i]->generate(0.0f, 0.4f, 0.0f);
+			cactiSceneBehind2[i]->generate(0.0f, 0.4f, 0.0f);
+			cactiSceneBehind3[i]->generate(0.0f, 0.4f, 0.0f);
+
+		}
+
+		if(jump && fpsActive){
+			//OBS.: É necessário um for separado pois as diversas iterações de um for conjunto fazem com
+			//      que alguns cactos de trás da cena fiquem à frente dos on Path
+			for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
+				if(cactiSceneOnPath1[i]->getCoordinateZ() < -1.5)
+					cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
+				
+				if(cactiSceneOnPath2[i]->getCoordinateZ() < -1.5)
+					cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
+				
+				if(cactiSceneOnPath3[i]->getCoordinateZ() < -1.5)
+				 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
+			}
+
+			// Para que não seja visualizada a primeira renderização deles, os pteros são gerados 300 blocos além
+			// da posição definida nesse if, ou seja, o jogador só os vê aproximadamente à partir da posição 450
+			if(beginPteros <= dino->getCoordinateX()){
+				for(unsigned short int i = 0; i < pterosSize; i++){
+
+			    	pteros1[i]->generate(0.4f, 0.4f, 0.4f);
+			    	pteros1[i]->flyAction();
+			    	collision = dino->collisionCheck(pteros1[i]->getCenterPositiveDistanceX(),
+		                                             pteros1[i]->getCenterPositiveDistanceY(),
+		                                             pteros1[i]->getCenterPositiveDistanceZ(),
+		                                             pteros1[i]->getCenterNegativeDistanceX(),
+		                                             pteros1[i]->getCenterNegativeDistanceY(),
+		                                             pteros1[i]->getCenterNegativeDistanceZ(), 
+		                                             pteros1[i]->getCoordinateX(), 
+		                                             pteros1[i]->getCoordinateY(), 
+		                                             pteros1[i]->getCoordinateZ());
+
+			    	pteros2[i]->generate(0.4f, 0.4f, 0.4f);
+			    	pteros2[i]->flyAction();
+			    	collision = dino->collisionCheck(pteros2[i]->getCenterPositiveDistanceX(),
+		                                             pteros2[i]->getCenterPositiveDistanceY(),
+		                                             pteros2[i]->getCenterPositiveDistanceZ(),
+		                                             pteros2[i]->getCenterNegativeDistanceX(),
+		                                             pteros2[i]->getCenterNegativeDistanceY(),
+		                                             pteros2[i]->getCenterNegativeDistanceZ(), 
+		                                             pteros2[i]->getCoordinateX(), 
+		                                             pteros2[i]->getCoordinateY(), 
+		                                             pteros2[i]->getCoordinateZ());
+
+			    	pteros3[i]->generate(0.4f, 0.4f, 0.4f);
+			    	pteros3[i]->flyAction();
+			    	collision = dino->collisionCheck(pteros3[i]->getCenterPositiveDistanceX(),
+		                                             pteros3[i]->getCenterPositiveDistanceY(),
+		                                             pteros3[i]->getCenterPositiveDistanceZ(),
+		                                             pteros3[i]->getCenterNegativeDistanceX(),
+		                                             pteros3[i]->getCenterNegativeDistanceY(),
+		                                             pteros3[i]->getCenterNegativeDistanceZ(), 
+		                                             pteros3[i]->getCoordinateX(), 
+		                                             pteros3[i]->getCoordinateY(), 
+		                                             pteros3[i]->getCoordinateZ());
+			    }
+			}
+		}else{
+			if(beginPteros <= dino->getCoordinateX()){
+				for(unsigned short int i = 0; i < pterosSize; i++){
+
+			    	pteros1[i]->generate(0.4f, 0.4f, 0.4f);
+			    	pteros1[i]->flyAction();
+			    	collision = dino->collisionCheck(pteros1[i]->getCenterPositiveDistanceX(),
+		                                             pteros1[i]->getCenterPositiveDistanceY(),
+		                                             pteros1[i]->getCenterPositiveDistanceZ(),
+		                                             pteros1[i]->getCenterNegativeDistanceX(),
+		                                             pteros1[i]->getCenterNegativeDistanceY(),
+		                                             pteros1[i]->getCenterNegativeDistanceZ(), 
+		                                             pteros1[i]->getCoordinateX(), 
+		                                             pteros1[i]->getCoordinateY(), 
+		                                             pteros1[i]->getCoordinateZ());
+
+			    	pteros2[i]->generate(0.4f, 0.4f, 0.4f);
+			    	pteros2[i]->flyAction();
+			    	collision = dino->collisionCheck(pteros2[i]->getCenterPositiveDistanceX(),
+		                                             pteros2[i]->getCenterPositiveDistanceY(),
+		                                             pteros2[i]->getCenterPositiveDistanceZ(),
+		                                             pteros2[i]->getCenterNegativeDistanceX(),
+		                                             pteros2[i]->getCenterNegativeDistanceY(),
+		                                             pteros2[i]->getCenterNegativeDistanceZ(), 
+		                                             pteros2[i]->getCoordinateX(), 
+		                                             pteros2[i]->getCoordinateY(), 
+		                                             pteros2[i]->getCoordinateZ());
+
+			    	pteros3[i]->generate(0.4f, 0.4f, 0.4f);
+			    	pteros3[i]->flyAction();
+			    	collision = dino->collisionCheck(pteros3[i]->getCenterPositiveDistanceX(),
+		                                             pteros3[i]->getCenterPositiveDistanceY(),
+		                                             pteros3[i]->getCenterPositiveDistanceZ(),
+		                                             pteros3[i]->getCenterNegativeDistanceX(),
+		                                             pteros3[i]->getCenterNegativeDistanceY(),
+		                                             pteros3[i]->getCenterNegativeDistanceZ(), 
+		                                             pteros3[i]->getCoordinateX(), 
+		                                             pteros3[i]->getCoordinateY(), 
+		                                             pteros3[i]->getCoordinateZ());
+			    }
+			}
+
+			for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
+
+				if(cactiSceneOnPath1[i]->getCoordinateZ() < -1.5)
+					cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
+				
+				if(cactiSceneOnPath2[i]->getCoordinateZ() < -1.5)
+					cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
+				
+				if(cactiSceneOnPath3[i]->getCoordinateZ() < -1.5)
+				 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
+			}
+		}
 		
-	 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
-	 	collision = dino->collisionCheck(cactiSceneOnPath3[i]->getCenterPositiveDistanceX(),
-		                                 cactiSceneOnPath3[i]->getCenterPositiveDistanceY(),
-		                                 cactiSceneOnPath3[i]->getCenterPositiveDistanceZ(),
-		                                 cactiSceneOnPath3[i]->getCenterNegativeDistanceX(),
-		                                 cactiSceneOnPath3[i]->getCenterNegativeDistanceY(),
-		                                 cactiSceneOnPath3[i]->getCenterNegativeDistanceZ(), 
-		                                 cactiSceneOnPath3[i]->getCoordinateX(), 
-		                                 cactiSceneOnPath3[i]->getCoordinateY(), 
-		                                 cactiSceneOnPath3[i]->getCoordinateZ());
-	}
+		// Aqui é gerado o dinossauro e definido suas ações:
+		dino->generate(0.4f, 0.4f, 0.4f);
+	    dino->runAction();
+	    dino->jumpAction(&jump, &descend);
 
-	// Para que não seja visualizada a primeira renderização deles, os pteros são gerados 300 blocos além
-	// da posição definida nesse if, ou seja, o jogador só os vê aproximadamente à partir da posição 450
-	if(50 <= dino->getCoordinateX()){
-		for(unsigned short int i = 0; i < pterosSize; i++){
-
-	    	pteros1[i]->generate(0.4f, 0.4f, 0.4f);
-	    	pteros1[i]->flyAction();
-	    	collision = dino->collisionCheck(pteros1[i]->getCenterPositiveDistanceX(),
-                                             pteros1[i]->getCenterPositiveDistanceY(),
-                                             pteros1[i]->getCenterPositiveDistanceZ(),
-                                             pteros1[i]->getCenterNegativeDistanceX(),
-                                             pteros1[i]->getCenterNegativeDistanceY(),
-                                             pteros1[i]->getCenterNegativeDistanceZ(), 
-                                             pteros1[i]->getCoordinateX(), 
-                                             pteros1[i]->getCoordinateY(), 
-                                             pteros1[i]->getCoordinateZ());
-
-	    	pteros2[i]->generate(0.4f, 0.4f, 0.4f);
-	    	pteros2[i]->flyAction();
-	    	collision = dino->collisionCheck(pteros2[i]->getCenterPositiveDistanceX(),
-                                             pteros2[i]->getCenterPositiveDistanceY(),
-                                             pteros2[i]->getCenterPositiveDistanceZ(),
-                                             pteros2[i]->getCenterNegativeDistanceX(),
-                                             pteros2[i]->getCenterNegativeDistanceY(),
-                                             pteros2[i]->getCenterNegativeDistanceZ(), 
-                                             pteros2[i]->getCoordinateX(), 
-                                             pteros2[i]->getCoordinateY(), 
-                                             pteros2[i]->getCoordinateZ());
-
-	    	pteros3[i]->generate(0.4f, 0.4f, 0.4f);
-	    	pteros3[i]->flyAction();
-	    	collision = dino->collisionCheck(pteros3[i]->getCenterPositiveDistanceX(),
-                                             pteros3[i]->getCenterPositiveDistanceY(),
-                                             pteros3[i]->getCenterPositiveDistanceZ(),
-                                             pteros3[i]->getCenterNegativeDistanceX(),
-                                             pteros3[i]->getCenterNegativeDistanceY(),
-                                             pteros3[i]->getCenterNegativeDistanceZ(), 
-                                             pteros3[i]->getCoordinateX(), 
-                                             pteros3[i]->getCoordinateY(), 
-                                             pteros3[i]->getCoordinateZ());
+	    // Apenas os cactos gerados exatamente no caminho terâo a colisão testada e serão exibidos na frente
+	    // do personagem
+	    for(unsigned short int i = 0; i < cactiSceneOnPathSize; i++){
+	    	if(cactiSceneOnPath1[i]->getCoordinateZ() > -1.5){
+				cactiSceneOnPath1[i]->generate(0.0f, 0.4f, 0.0f);
+				collision = dino->collisionCheck(cactiSceneOnPath1[i]->getCenterPositiveDistanceX(),
+				                                 cactiSceneOnPath1[i]->getCenterPositiveDistanceY(),
+				                                 cactiSceneOnPath1[i]->getCenterPositiveDistanceZ(),
+				                                 cactiSceneOnPath1[i]->getCenterNegativeDistanceX(),
+				                                 cactiSceneOnPath1[i]->getCenterNegativeDistanceY(),
+				                                 cactiSceneOnPath1[i]->getCenterNegativeDistanceZ(), 
+				                                 cactiSceneOnPath1[i]->getCoordinateX(), 
+				                                 cactiSceneOnPath1[i]->getCoordinateY(), 
+				                                 cactiSceneOnPath1[i]->getCoordinateZ());
+			}
+			
+			if(cactiSceneOnPath2[i]->getCoordinateZ() > -1.5){
+				cactiSceneOnPath2[i]->generate(0.0f, 0.4f, 0.0f);
+				collision = dino->collisionCheck(cactiSceneOnPath2[i]->getCenterPositiveDistanceX(),
+				                                 cactiSceneOnPath2[i]->getCenterPositiveDistanceY(),
+				                                 cactiSceneOnPath2[i]->getCenterPositiveDistanceZ(),
+				                                 cactiSceneOnPath2[i]->getCenterNegativeDistanceX(),
+				                                 cactiSceneOnPath2[i]->getCenterNegativeDistanceY(),
+				                                 cactiSceneOnPath2[i]->getCenterNegativeDistanceZ(), 
+				                                 cactiSceneOnPath2[i]->getCoordinateX(), 
+				                                 cactiSceneOnPath2[i]->getCoordinateY(), 
+				                                 cactiSceneOnPath2[i]->getCoordinateZ());
+			}
+			
+			if(cactiSceneOnPath3[i]->getCoordinateZ() > -1.5){
+			 	cactiSceneOnPath3[i]->generate(0.0f, 0.4f, 0.0f);
+			 	collision = dino->collisionCheck(cactiSceneOnPath3[i]->getCenterPositiveDistanceX(),
+				                                 cactiSceneOnPath3[i]->getCenterPositiveDistanceY(),
+				                                 cactiSceneOnPath3[i]->getCenterPositiveDistanceZ(),
+				                                 cactiSceneOnPath3[i]->getCenterNegativeDistanceX(),
+				                                 cactiSceneOnPath3[i]->getCenterNegativeDistanceY(),
+				                                 cactiSceneOnPath3[i]->getCenterNegativeDistanceZ(), 
+				                                 cactiSceneOnPath3[i]->getCoordinateX(), 
+				                                 cactiSceneOnPath3[i]->getCoordinateY(), 
+				                                 cactiSceneOnPath3[i]->getCoordinateZ());
+			}
 	    }
+
+		// Aqui ocorre a geração dos objetos à frente do dinossauro em relação à câmera (no modo câmera padrão)
+		for(unsigned short int i = 0; i < cactiSceneForwardSize; i++){
+
+			cactiSceneForward1[i]->generate(0.0f, 0.4f, 0.0f);
+			cactiSceneForward2[i]->generate(0.0f, 0.4f, 0.0f);
+			cactiSceneForward3[i]->generate(0.0f, 0.4f, 0.0f);
+		}
+		
+		if(collision || restart){
+			gameOver();
+		}
+
+		unsigned int s = dino->getCoordinateX() * 1.5;
+		//Carregar o label "SCORE" e o score que cresce com a coodernada X e
+		//Conversão para string
+		string score = to_string(s);
+
+		// Carrega a projeção ortogonal
+		setOrtho(widthCurrent, heightCurrent);
+			// Chama a função que desenha o score
+			drawScore(score, widthCurrent);
+		// Voltando para a perspectiva anterior
+		restoreView();
+	    
+	    // Troca os buffers
+	    glutSwapBuffers();
+		
 	}
-	
-	// Aqui é gerado o dinossauro e definido suas ações:
-	dino->generate(0.4f, 0.4f, 0.4f);
-    dino->runAction();
-    dino->jumpAction(&jump, &descend);
-
-	// Aqui ocorre a geração dos objetos à frente do dinossauro em relação à câmera (no modo câmera padrão)
-	for(unsigned short int i = 0; i < cactiSceneForwardSize; i++){
-
-		cactiSceneForward1[i]->generate(0.0f, 0.4f, 0.0f);
-		cactiSceneForward2[i]->generate(0.0f, 0.4f, 0.0f);
-		cactiSceneForward3[i]->generate(0.0f, 0.4f, 0.0f);
-	}
-	
-	if(collision || restart){
-		gameOver();
-	}
-
-	//Carregar o label "SCORE" e o score que cresce com a coodernada X
-	//Carregando a projeção ortogonal
-	unsigned int score = dino->getCoordinateX();
-
-	//Conversão para string
-	string s = to_string(score);
-
-	setOrtho();
-	
-	glPushMatrix();
-	
-	glLoadIdentity();
-	
-	//Bitmap da string "SCORE:" e o score
-
-	drawString("SCORE: ", widthCurrent - 100, 20);
-	drawString(s, widthCurrent - 30, 20);
-
-
-	glPopMatrix();
-	//Voltando para a perspectiva anterior
-	restoreView();
-    
-    // Troca os buffers
-    glutSwapBuffers();
 }
 
 int main (int argumentsC, char **argumentsV){
 	// Inicialização do Glut (definitions.h)
+	enableLight();
 	initializations(argumentsC, argumentsV);
 	//enables();
-
-	// Define as posições iniciais de cada objeto no mundo:
-	objectsInitialPositions();
 
 	// Passa a display tanto para glutDisplayFunc quanto para
 	// a glutIdleFunc, pois, pelas minhas pesquisas em tutoriais,

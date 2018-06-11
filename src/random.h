@@ -150,7 +150,7 @@ int randomPterodactylusOnPath(int positionArray, float CharacterPositionZ, Ptero
             // Define a coordenada X como o valor de positionArray (referenta a posição dentro do limite
             // de begin até begin+positionArray)
             // OBS.: O rand()%151 serve para espalhar os 50 pteros ao longo de 150 blocos
-            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + rand()%50+1);
+            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 50);
             // Há 33% de chance do pterodáctilo vir voando mais alto do que o normal
             // O 1 + (rand()%11 + 1)/10.0f garante que essa variação será de 1.0 até 2.0, pois o
             // rand()%11 + 1 faz com que o intervalo seja de 1 até 10 e a divisão por 10.0f
@@ -170,7 +170,7 @@ int randomPterodactylusOnPath(int positionArray, float CharacterPositionZ, Ptero
         }else{
             // Caso não caia na condição de gerar os cactos no meio do caminho, eles são
             // gerados na exata posição em X, mas com um Z aleatório no resto da cena
-            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 60 + rand()%50);
+            pterosOnPath[positionArray]->setCoordinateX(positionArray + begin + 50);
             // Aqui a variação da altura fica entre 1 e 5 para dar mais variação na altitude
             // já que ele não está voando no caminho do dino, não há necessidade de colocar
             // uma altura que ele alcance

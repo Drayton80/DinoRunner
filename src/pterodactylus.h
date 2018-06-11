@@ -151,8 +151,6 @@ Pterodactylus::Pterodactylus(float currentX, float currentY, float currentZ,
  *     Define o movimento constante do pterodáctilo ao longo do plano XoZ.
  */
 void Pterodactylus::flyAction(){
-    float velocity;
-
     // Faz com que a posição seja decrementada de acordo com a variation X:
     coordinateX  = coordinateX + constantVariationX;
 }

@@ -95,7 +95,7 @@ Dinosaur::Dinosaur(){
     // Atributos da Classe:
     variationX = 0;
     incrementVariationX = 0.00000055;
-    maxVariationX = 0.5;
+    maxVariationX = 0.3;
 
     variationY = 0.17;
     decrementVariationY = 0.007;
@@ -132,7 +132,7 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ){
     // Atributos da Classe:
     variationX = 0;
     incrementVariationX = 0.00000055;
-    maxVariationX = 0.5;
+    maxVariationX = 0.1;
 
     variationY = 0.17;
     decrementVariationY = 0.007;
@@ -167,7 +167,7 @@ Dinosaur::Dinosaur(float currentX, float currentY, float currentZ,
     // Atributos da Classe:
     variationX = 0;
     incrementVariationX = 0.00000055;
-    maxVariationX = 0.5;
+    maxVariationX = 0.3;
 
     variationY = 0.17;
     decrementVariationY = 0.007;  

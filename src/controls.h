@@ -30,10 +30,15 @@ float lastX, lastY;
  *     y: coordenada Y atual do mouse no momento que a tecla key foi pressionada.
  */
 void keyboard (unsigned char key, int x, int y) {
+	if(menu){
+		menu = false;
+		startGame = true;
+	}
+
     if (key == 'w' || key == SPACE_BAR_KEY){
     	// Apenas executa as mudanças do pulo se jump for igual a false, sendo isso
     	// feito para que o usuário não execute um outro pulo no meio do pulo
-    	if(!jump){
+    	if(!jump && !startGame){
     		jump = true;
     		height += 0.1;
 
@@ -94,25 +99,36 @@ void keyboard (unsigned char key, int x, int y) {
  *     y: coordenada Y atual do mouse no momento que a tecla key foi pressionada.
  */
 void keyboardSpecial (int key, int x, int y){
+	if(menu){
+		menu = false;
+		startGame = true;
+	}
+
 	// Ao pressionar a Seta para Cima aumenta a Intenisdade da rotação da câmera
 	if (key == GLUT_KEY_UP){
-		// Se a intensidade for menor que 2 (valor máximo de
-		// intensidade para o movimento da câmera) então aumenta seu
-		// valor em 0.1
-		if(intensity < 2){
-			intensity += 0.1;
-		}
+		// Apenas executa as mudanças do pulo se jump for igual a false, sendo isso
+    	// feito para que o usuário não execute um outro pulo no meio do pulo
+    	if(!jump && !startGame){
+    		jump = true;
+    		height += 0.1;
+
+    		if(fpsActive){
+	    		// TO DO Jump moviment if camera Jump
+	    	}
+    	}
 	}
 
 	// Ao pressionar a Seta para Cima aumenta a Intenisdade da rotação da câmera
 	if (key == GLUT_KEY_DOWN){
-		// Se a intensidade for maior que 0.1 (valor mínimo de
-		// intensidade para o movimento da câmera) então diminui seu
-		// valor em 0.1. Isso possibilita que a câmera nunca fique 
-		// estagnada devido ao valor 0 de intensidade
-		if(intensity > 0.1){
-			intensity -= 0.1;
-		}
+		// Enquanto estiver durante a ação do pulo, é possível apertar a tecla s
+    	// para descer mais rapidamente
+    	if(jump){
+    		descend = -0.15;
+
+    		if(fpsActive){
+	    		// TO DO Jump moviment if camera Jump
+	    	}
+    	}
 	}
 }
 

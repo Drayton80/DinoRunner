@@ -13,19 +13,36 @@
 GLuint ground_tex;
 GLuint background_tex;
 
-float positionFactor = 0.0;
+float positionFactor1 =   0.0;
+float positionFactor2 =  50.0;
+float positionFactor3 = 100.0;
+
 float descend = 0.0;
 
+bool menu = true;
+bool startGame = false;
 bool collision = false;
 bool restart = false;
 bool jump = false;
 
 // Habilita certas definições e caracteristícas do OpenGL, como luz e 
 // profundidade da cena:
-void enables(){
-    glEnable (GL_DEPTH_TEST);   // Habilita o test de profundidade
-    glEnable (GL_LIGHTING);     // Habilita a iluminação
-    glEnable (GL_LIGHT0);       // Habilita a luz difusa (Light 0)
+void enableLight(){
+
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat ambientLight[]  = {0.2, 0.2, 0.2, 1.0};
+    GLfloat diffuseLight[]  = {0.8, 0.8, 0.8, 1.0};
+    GLfloat specularLight[] = {1.0, 1.0, 1.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+
+    GLfloat lightPosition[] = {0.5, 0.5, 0.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 }
 
 // Inicializa o Glut e abre a janela do programa:
@@ -48,7 +65,7 @@ void initializations(int argumentsC, char **argumentsV){
 
     ground_tex =   SOIL_load_OGL_texture
       (
-        "assets/ground.png",
+        "assets/ground3.jpg",
         SOIL_LOAD_AUTO,
         SOIL_CREATE_NEW_ID,
         SOIL_FLAG_INVERT_Y
