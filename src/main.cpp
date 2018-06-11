@@ -488,6 +488,7 @@ void gameOver(){
 	setOrtho(widthCurrent, heightCurrent);
 		glLoadIdentity();
 
+		/*
 		glTranslatef( 0.0, 0.0, -2.0);
 
 		glColor4f(0.0, 0.0, 0.0, 0.5);
@@ -497,6 +498,7 @@ void gameOver(){
 			glVertex3f(         0.0,           0.0, -2.0);
 			glVertex3f(widthCurrent,           0.0, -2.0);
 		glEnd();
+		*/
 
 		drawGameOver(widthCurrent, heightCurrent);
 	restoreView();
@@ -595,47 +597,62 @@ void background(){
 	// fazer uma ou mais transformações focarem em apenas um escopo de glPushMatrix()[...]glPopMatrix()
 	// OBS.: É similar ao funcionamento de um abre e fecha {}
 	glPushMatrix();
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, background_tex);
-		glBegin(GL_QUADS);
-				glTexCoord2d(0.0,0.0); 
-				glVertex3f(dino->getCoordinateX() - 100.0f, -20.0f, -40.0f);
+		if(!fpsActive){
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, background_tex);
+			glBegin(GL_QUADS);
+					glTexCoord2d(0.0,0.0); 
+					glVertex3f(dino->getCoordinateX() - 70.0f, -20.0f, -45.0f);
 
-				glTexCoord2d(1.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 100.0f, -20.0f, -40.0f);
+					glTexCoord2d(1.0,0.0); 
+					glVertex3f(dino->getCoordinateX() + 70.0f, -20.0f, -45.0f);
 
-				glTexCoord2d(1.0,1.0); 
-				glVertex3f(dino->getCoordinateX() + 100.0f, 60.0f, -40.0f);
+					glTexCoord2d(1.0,1.0); 
+					glVertex3f(dino->getCoordinateX() + 70.0f, 55.0f, -45.0f);
 
-				glTexCoord2d(0.0,1.0);
-				glVertex3f(dino->getCoordinateX() - 100.0f, 60.0f, -40.0f);			
-		glEnd();
-		glDisable(GL_TEXTURE_2D);
-	
+					glTexCoord2d(0.0,1.0);
+					glVertex3f(dino->getCoordinateX() - 70.0f, 55.0f, -45.0f);			
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}else{
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, background_tex);
 
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, background_tex);
+			glBegin(GL_QUADS);
+					glTexCoord2d(0.0,0.0); 
+					glVertex3f(dino->getCoordinateX() + 45.0f, -50.0f, -60.0f);
 
-		glBegin(GL_QUADS);
-				glTexCoord2d(0.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 40.0f, -50.0f, -50.0f);
+					glTexCoord2d(1.0,0.0); 
+					glVertex3f(dino->getCoordinateX() + 45.0f, -50.0f,  60.0f);
 
-				glTexCoord2d(1.0,0.0); 
-				glVertex3f(dino->getCoordinateX() + 40.0f, -50.0f, 50.0f);
+					glTexCoord2d(1.0,1.0); 
+					glVertex3f(dino->getCoordinateX() + 45.0f, 70.0f,  60.0f);
 
-				glTexCoord2d(1.0,1.0); 
-				glVertex3f(dino->getCoordinateX() + 40.0f, 150.0f, 50.0f);
-
-				glTexCoord2d(0.0,1.0);
-				glVertex3f(dino->getCoordinateX() + 40.0f, 150.0f, -50.0f);			
-				
-		glEnd();
-		glDisable(GL_TEXTURE_2D);
+					glTexCoord2d(0.0,1.0);
+					glVertex3f(dino->getCoordinateX() + 45.0f, 70.0f, -60.0f);			
+					
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}
 	glPopMatrix();
 }
 
 void display(void){
 	if(startGame){
+		// Define a cor de limpeza do:
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// Limpa o color buffer e o depth buffer com a cor indicada:
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Carrega a matriz identidade no conjunto de matrizes para
+		// poder limpar as matrizes de mudança
+		glLoadIdentity();
+
+		setOrtho(widthCurrent, heightCurrent);
+			drawLoading(widthCurrent, heightCurrent);
+		restoreView();
+
+		glutSwapBuffers();
+
 		// Define as posições iniciais de cada objeto no mundo:
 		objectsInitialPositions();
 

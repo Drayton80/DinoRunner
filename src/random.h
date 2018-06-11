@@ -114,8 +114,8 @@ int randomCactiOnPath(int *positionArray, float CharacterPositionZ, Cactus **cac
             // Caso não caia na condição de gerar os cactos no meio do caminho, eles são
             // gerados na exata posição em X, mas com um Z aleatório no resto da cena
             cactiSceneOnPath[*positionArray]->setCoordinateX(*positionArray+begin);
-            rand()%2 == 1 ? cactiSceneOnPath[*positionArray]->setCoordinateZ(-(rand()%40 + 5)):
-                            cactiSceneOnPath[*positionArray]->setCoordinateZ( (rand()%40 + 5));
+            rand()%2 == 1 ? cactiSceneOnPath[*positionArray]->setCoordinateZ(-(rand()%36 + 5)):
+                            cactiSceneOnPath[*positionArray]->setCoordinateZ( (rand()%36 + 5));
         }
 
         // OBS.: é usado um positionArray auxiliar dentro de um for de i também pois mesmo que não seja 

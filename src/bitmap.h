@@ -65,6 +65,18 @@ void drawMenuTitle(float width, float height){
 	glPopMatrix();
 }
 
+void drawLoading(float width, float height){
+	glPushMatrix();
+		glLoadIdentity();
+
+		string information = "   CARREGANDO...";
+
+		unsigned short int informationLength = information.length();
+
+		drawString(information, (glutGet(GLUT_SCREEN_WIDTH) - width)/2 - informationLength, height/2 + 10, "TYPE_MENU_INFORMATION");
+	glPopMatrix();
+}
+
 void drawScore(string score, int positionX){
 	glPushMatrix();
 		glLoadIdentity();
